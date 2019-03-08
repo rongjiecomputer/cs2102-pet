@@ -11,7 +11,7 @@
 
 ```bash
 cd cs2102-pet
-npm install express ejs pg passport
+npm install express ejs pg passport passport-local body-parser express-session bcrypt connect-flash
 ```
 
 ### Setup environment
