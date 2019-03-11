@@ -36,6 +36,20 @@ source env
 Remember to set environment variables before running the app. You can edit `.env`
 and `env.bat` according to your own setup.
 
+### Set database schema (will destroy previous data)
+
+For Unix
+
+```bash
+psql -U $POSTGRES_USERNAME -f sql/schema.sql
+```
+
+For Windows
+
+```
+psql -U %POSTGRES_USERNAME% -f sql/schema.sql
+```
+
 ## Run server
 
 ```bash
