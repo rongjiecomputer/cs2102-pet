@@ -59,4 +59,31 @@ module.exports = passport => {
       client.release();
     }
   }));
+
+  passport.use('local-login', new LocalStrategy({
+    // by default, local strategy uses username and password, we will override with email
+    usernameField: 'email',
+    passwordField: 'password',
+    passReqToCallback: true
+  }, async (req, email, password, done) => {
+    // find a user whose email is the same as the forms email
+    // we are checking to see if the user trying to login already exists
+    const client = await db.connect();
+    try {
+      const data = await client.query('SELECT * FROM Account WHERE email = $1', [email]);
+      if (data.rowCount < 1) {
+        return done(null, false, req.flash('loginMessage', 'No user found.'));
+      }
+
+      const user = data.rows[0];
+      if (!validatePassword(user, password))
+        return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.'));
+
+      return done(null, user);
+    } catch (e) {
+      return done(e);
+    } finally {
+      client.release();
+    }
+  }));
 }
