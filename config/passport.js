@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const LocalStrategy = require('passport-local').Strategy;
 
 const db = require('../db');
+const AccountType = require('../models/AccountType');
 
 function validatePassword(user, password) {
   return bcrypt.compareSync(password, user.hash);
@@ -51,8 +52,15 @@ module.exports = passport => {
       const newData = await client.query(`INSERT INTO Account (name, username, email, hash, phone)
         VALUES ($1, $2, $3, $4, $5) RETURNING *`,
         [req.body.name, req.body.username, email, hash, req.body.phone]);
+      const user = newData.rows[0];
 
-      return done(null, newData.rows[0]);
+      if (req.body.type == AccountType.PET_OWNER) {
+        await client.query(`INSERT INTO PetOwner (aid) VALUES ($1)`, [user.aid]);
+      } else if (req.body.type == AccountType.CARE_TAKER) {
+        await client.query(`INSERT INTO CareTaker (aid) VALUES ($1)`, [user.aid]);
+      }
+
+      return done(null, user);
     } catch (e) {
       return done(e);
     } finally {

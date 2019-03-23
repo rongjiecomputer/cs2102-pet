@@ -30,14 +30,15 @@ module.exports = (app, passport) => {
     failureFlash: true
   }));
 
-  app.get('/profile', isLoggedIn, function (req, res) {
-    res.send('Logged in!');
-    // res.render('profile', {
-    //   user: req.user // get the user out of session and pass to template
-    // });
+  app.get('/profile', isLoggedIn, (req, res) => {
+    res.render('profile', { user: req.user });
   });
 
-  app.get('/logout', function (req, res) {
+  app.get('/profile/:aid(\\d+)', isLoggedIn, (req, res) => {
+    // req.params.aid
+  });
+
+  app.get('/logout', (req, res) => {
     req.logout();
     res.redirect('/');
   });
