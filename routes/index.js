@@ -33,7 +33,7 @@ module.exports = (app, passport) => {
   }));
 
   app.get('/profile', isLoggedIn, (req, res) => {
-    res.render('profile', { displayedUser: req.user, message: '' });
+    res.render('profile', { displayedUser: req.user });
   });
 
   app.get('/profile/:aid(\\d+)', isLoggedIn, async (req, res) => {

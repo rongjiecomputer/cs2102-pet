@@ -2,8 +2,8 @@
 
 <main class="container">
 
-  <% if (message.length > 0) { %>
-  <div class="alert alert-danger"><%= message %></div>
+  <% if (displayedUser === null) { %>
+  <div class="alert alert-danger">Profile not found.</div>
   <% } else { %>
   <section>
     <p>Name: <%= displayedUser.name %></p>
