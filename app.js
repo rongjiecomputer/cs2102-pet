@@ -18,6 +18,12 @@ app.use(session({ secret: 'secret', cookie: { maxAge: 600000 }, resave: false, s
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
+app.use((req, res, next) => {
+  // Set variables that every .ejs files can access.
+  res.locals.user = req.user;
+  res.locals.authenticated = req.isAuthenticated();
+  next();
+});
 
 const configurePassport = require("./config/passport");
 configurePassport(passport);

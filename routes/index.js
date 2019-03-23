@@ -42,4 +42,9 @@ module.exports = (app, passport) => {
     req.logout();
     res.redirect('/');
   });
+
+  // 404 handler, must be last!
+  app.use((req, res, next) => {
+    return res.status(404).render('404', { url: req.url });
+  });
 };

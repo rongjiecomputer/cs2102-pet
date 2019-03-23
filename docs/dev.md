@@ -25,3 +25,11 @@ encouraged instead of Node.js usual callback style APIs.
 - https://expressjs.com/en/guide/routing.html
 - https://ejs.co/#docs
 - https://www.w3schools.com/bootstrap4/default.asp
+
+## Project specific ejs notes
+
+Every `.ejs` template will have access to these JS variables:
+
+- `authenticated: boolean`: whether the current visitor has logged in.
+- `user: Object`: user object of current authenticated visitor if `authenticated`
+  is true, otherwise `undefined`.
