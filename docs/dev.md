@@ -20,3 +20,8 @@ Since we only need to support latest version of Chrome and Node.js, there is no
 restriction on ES6 features. In particular, `async/await` version of APIs are highly
 encouraged instead of Node.js usual callback style APIs.
 
+## Recommended reading
+
+- https://expressjs.com/en/guide/routing.html
+- https://ejs.co/#docs
+- https://www.w3schools.com/bootstrap4/default.asp
