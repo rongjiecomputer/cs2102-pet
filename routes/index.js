@@ -1,3 +1,5 @@
+const profile = require('./profile');
+
 // route middleware to make sure a user is logged in
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated())
@@ -31,11 +33,11 @@ module.exports = (app, passport) => {
   }));
 
   app.get('/profile', isLoggedIn, (req, res) => {
-    res.render('profile', { user: req.user });
+    res.render('profile', { displayedUser: req.user, message: '' });
   });
 
-  app.get('/profile/:aid(\\d+)', isLoggedIn, (req, res) => {
-    // req.params.aid
+  app.get('/profile/:aid(\\d+)', isLoggedIn, async (req, res) => {
+    res.render('profile', await profile.getTplObjectForProfile(req.params.aid));
   });
 
   app.get('/logout', (req, res) => {

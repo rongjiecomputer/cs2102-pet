@@ -1,13 +1,17 @@
-<%- include('header', {title: 'Login'}); -%>
+<%- include('header', {title: 'Profile'}); -%>
 
 <main class="container">
 
-<section>
-  <p>Name: <%= user.name %></p>
-  <p>Username: <%= user.username %></p>
-  <p>Phone: <%= user.phone %></p>
-  <p>Email: <%= user.email %></p>
-</section>
+  <% if (message.length > 0) { %>
+  <div class="alert alert-danger"><%= message %></div>
+  <% } else { %>
+  <section>
+    <p>Name: <%= displayedUser.name %></p>
+    <p>Username: <%= displayedUser.username %></p>
+    <p>Phone: <%= displayedUser.phone %></p>
+    <p>Email: <%= displayedUser.email %></p>
+  </section>
+  <% } %>
 
 </main>
 
