@@ -36,6 +36,10 @@ module.exports = (app, passport) => {
     res.render('profile', { displayedUser: req.user });
   });
 
+  app.get('/profile/edit', isLoggedIn, (req, res) => {
+      res.render('edit', { displayedUser: req.user });
+  });
+
   app.get('/profile/:aid(\\d+)', isLoggedIn, async (req, res) => {
     res.render('profile', await profile.getTplObjectForProfile(req.params.aid));
   });
