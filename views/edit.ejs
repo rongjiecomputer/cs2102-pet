@@ -1,87 +1,109 @@
 <%- include('header', {title: 'Edit Profile'}); -%>
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/edit.css">
-    <script src="/js/jquery-3.3.1.min.js"></script>
-    <script src="/js/bootstrap.bundle.min.js"></script>
-</head>
-
 <main class="container">
 
-  <% if (displayedUser === null) { %>
-  <div class="alert alert-danger">Profile not found.</div>
-  <% } else { %>
-      <div class="container">
-          <button type="button" id="pwdBtn" class="btn btn-primary" onclick="openForm('pwdPopup')">Change Password</button>
-          <button type="button" id="emailBtn" class="btn btn-primary" onclick="openForm('emailPopup')">Change Email</button>
-          <button type="button" id="phoneBtn" class="btn btn-primary" onclick="openForm('phonePopup')">Change Phone</button>
-          <div class="form-popup" id="pwdPopup">
-              <form action="/edit" method="POST" class="form-container">
-                  <h1 class="font-weight-bolder">Change Password</h1>
+    <% if (displayedUser === null) { %>
+        <div class="alert alert-danger">Profile not found.</div>
+    <% } else { %>
 
-                  <div class="form-group">
-                     <label for="pwdPopup" class="font-weight-bold"><b>Old Password</b></label>
-                    <input class="form-control" type="password" placeholder="Enter Old Password" name="oldPwd" required>
-                  </div>
+        <!-- Change Password -->
+        <!-- Button -->
+        <button type="button" id="pwdBtn" class="btn btn-primary" data-toggle="modal" data-target="#pwdModal">
+            Change Password
+        </button>
 
-                  <div class="form-group">
-                    <label for="pwdPopup" class="font-weight-bold"><b>New Password</b></label>
-                    <input class="form-control" type="password" placeholder="Enter New Password" name="newPwd" required>
-                  </div>
+        <!-- Modal -->
+        <div class="modal fade" id="pwdModal" tabindex="-1" role="dialog" aria-labelledby="pwdModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="pwdModalLabel">Change Password</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="/edit" method="POST">
+                            <label class="font-weight-bold"><b>Old Password</b></label>
+                            <input class="form-control" type="password" placeholder="Enter Old Password" name="oldPwd" required>
 
-                  <div class="form-group">
-                      <label for="pwdPopup" class="font-weight-bold"><b>Confirm New Password</b></label>
-                      <input class="form-control" type="password" placeholder="Confirm New Password" name="cfmNewPwd" required>
-                  </div>
+                            <label class="font-weight-bold"><b>New Password</b></label>
+                            <input class="form-control" type="password" placeholder="Enter New Password" name="newPwd" required>
 
-                  <button class="btn btn-success" type="submit" class="btn">Change</button>
-                  <button class="btn btn-danger" type="button" class="btn cancel" onclick="closeForm('pwdPopup')">Close</button>
-              </form>
-          </div>
+                            <label class="font-weight-bold"><b>Confirm New Password</b></label>
+                            <input class="form-control" type="password" placeholder="Confirm New Password" name="cfmNewPwd" required>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success">Submit</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-          <div class="form-popup" id="emailPopup">
-              <form action="/edit" method="POST" class="form-container">
-                  <h1 class="font-weight-bolder">Change Email</h1>
+        <!-- Change Email -->
+        <!-- Button -->
+        <button type="button" id="emailBtn" class="btn btn-primary" data-toggle="modal" data-target="#emailModal">
+            Change Email
+        </button>
 
-                  <div class="form-group">
-                      <label for="emailPopup" class="font-weight-bold"><b>New Email</b></label>
-                      <input class="form-control" type="text" placeholder="Enter New Email" name="oldEmail" required>
-                  </div>
+        <!-- Modal -->
+        <div class="modal fade" id="emailModal" tabindex="-1" role="dialog" aria-labelledby="emailModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="emailModalLabel">Change Email</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="/edit" method="POST">
+                            <label class="font-weight-bold"><b>New Email</b></label>
+                            <input class="form-control" type="text" placeholder="Enter New Email" name="newEmail" required>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success">Submit</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                  <div class="form-group">
-                      <label for="emailPopup" class="font-weight-bold"><b>Confirm New Email</b></label>
-                      <input class="form-control" type="text" placeholder="Confirm New Email" name="newEmail" required>
-                  </div>
+        <!-- Change Phone -->
+        <!-- Button -->
+        <button type="button" id="phoneBtn" class="btn btn-primary" data-toggle="modal" data-target="#phoneModal">
+            Change Phone
+        </button>
 
-                  <button class="btn btn-success" type="submit" class="btn">Change</button>
-                  <button class="btn btn-danger" type="button" class="btn cancel" onclick="closeForm('emailPopup')">Close</button>
-              </form>
-          </div>
-
-          <div class="form-popup" id="phonePopup">
-              <form action="/edit" method="POST" class="form-container">
-                  <h1 class="font-weight-bolder">Change Phone</h1>
-
-                  <div class="form-group">
-                      <label for="phonePopup" class="font-weight-bold"><b>New Phone</b></label>
-                      <input class="form-control" type="text" placeholder="Enter New Phone" name="oldPhone" required>
-                  </div>
-
-                  <div class="form-group">
-                      <label for="phonePopup" class="font-weight-bold"><b>Confirm New Phone</b></label>
-                      <input class="form-control" type="text" placeholder="Confirm New Phone" name="newPhone" required>
-                  </div>
-
-                  <button class="btn btn-success" type="submit" class="btn">Change</button>
-                  <button class="btn btn-danger" type="button" class="btn cancel" onclick="closeForm('phonePopup')">Close</button>
-              </form>
-          </div>
-
-      </div>
-  <% } %>
+        <!-- Modal -->
+        <div class="modal fade" id="phoneModal" tabindex="-1" role="dialog" aria-labelledby="phoneModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="phoneModalLabel">Change Phone</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="/edit" method="POST">
+                                <label class="font-weight-bold"><b>New Phone</b></label>
+                                <input class="form-control" type="text" placeholder="Enter New Phone" name="newPhone" required>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success">Submit</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <% } %>
 
 </main>
 
