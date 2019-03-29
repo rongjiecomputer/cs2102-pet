@@ -14,20 +14,3 @@ footer {
   color: #fff;
   padding: 50px 0;
 }
-
-/* start of edit page css*/
-#pwdBtn{
-  position: fixed;
-  left: 10%;
-}
-
-#emailBtn{
-  position: fixed;
-  left: 35%;
-}
-
-#phoneBtn{
-  position: fixed;
-  left: 60%;
-}
-/* end of edit page css */
