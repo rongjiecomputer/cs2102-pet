@@ -231,4 +231,4 @@ INSERT INTO Breed (name) VALUES ('Bulldog','Poodle','Labrador Retriever','Mastif
 INSERT INTO MedicalCondition (name) VALUES ('Arthritis','Cancer','Dental Disease','Distemper','Epilepsy','Gastric Bloat'
 'Heartworm','Too Fat','Too Thin');
 INSERT INTO ServiceType (name) VALUES ('Pet Walking','Pet Grooming','Pet health checkup','Pet Petting','Taking a pet on
-a nice date to reminice your friendship');
+a nice date to reminisce your friendship');
