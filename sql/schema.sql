@@ -224,6 +224,11 @@ EXECUTE PROCEDURE is_petowner();
  */
 
 INSERT INTO Region (name) VALUES ('Kent Ridge');
-INSERT INTO Breed (name) VALUES ('blah');
-INSERT INTO MedicalCondition (name) VALUES ('blah');
-INSERT INTO ServiceType (name) VALUES ('blah');
+INSERT INTO Breed (name) VALUES ('Bulldog','Poodle','Labrador Retriever','Mastiff','Beagle','Greyhound','Pug'
+'Siberian Husky','Dachshund','ChuHuaHua','Dog thats a cat','Cat thats a dog','Russian Blue','Persian Cat','Scottish Fold'
+'British ShortHair','Siamese Cat','Maine Coon','Munchkin Cat','Ragdoll','Sphynx cat','Abyssinian Cat','Turkish Angora'
+'Norwegian Forest Cat','Bengal Cat','Birman','a Bird');
+INSERT INTO MedicalCondition (name) VALUES ('Arthritis','Cancer','Dental Disease','Distemper','Epilepsy','Gastric Bloat'
+'Heartworm','Too Fat','Too Thin');
+INSERT INTO ServiceType (name) VALUES ('Pet Walking','Pet Grooming','Pet health checkup','Pet Petting','Taking a pet on
+a nice date to reminice your friendship');
