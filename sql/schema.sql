@@ -223,7 +223,7 @@ EXECUTE PROCEDURE is_petowner();
  * Pre-populated values.
  */
 
-INSERT INTO Region (name) VALUES ('Kent Ridge');
+INSERT INTO Region (name) VALUES ('Central Region','East Region','North Region','North-East Region','West Region');
 INSERT INTO Breed (name) VALUES ('Bulldog','Poodle','Labrador Retriever','Mastiff','Beagle','Greyhound','Pug'
 'Siberian Husky','Dachshund','ChuHuaHua','Dog thats a cat','Cat thats a dog','Russian Blue','Persian Cat','Scottish Fold'
 'British ShortHair','Siamese Cat','Maine Coon','Munchkin Cat','Ragdoll','Sphynx cat','Abyssinian Cat','Turkish Angora'
