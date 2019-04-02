@@ -37,7 +37,7 @@ module.exports = (app, passport) => {
   });
 
   app.get('/profile/edit', isLoggedIn, (req, res) => {
-      res.render('edit', { displayedUser: req.user });
+    res.render('edit', { /*displayedUser: req.user*/ });
   });
 
   app.get('/profile/:aid(\\d+)', isLoggedIn, async (req, res) => {
