@@ -1,0 +1,18 @@
+<%- include('header', {title: 'Profile'}); -%>
+
+<main class="container">
+
+  <% if (displayedUser === null) { %>
+  <div class="alert alert-danger">Profile not found.</div>
+  <% } else { %>
+  <section>
+    <p>Name: <%= displayedUser.name %></p>
+    <p>Username: <%= displayedUser.username %></p>
+    <p>Phone: <%= displayedUser.phone %></p>
+    <p>Email: <%= displayedUser.email %></p>
+  </section>
+  <% } %>
+
+</main>
+
+<%- include('footer'); -%>

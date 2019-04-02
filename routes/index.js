@@ -1,3 +1,5 @@
+const profile = require('./profile');
+
 // route middleware to make sure a user is logged in
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated())
@@ -30,15 +32,25 @@ module.exports = (app, passport) => {
     failureFlash: true
   }));
 
-  app.get('/profile', isLoggedIn, function (req, res) {
-    res.send('Logged in!');
-    // res.render('profile', {
-    //   user: req.user // get the user out of session and pass to template
-    // });
+  app.get('/profile', isLoggedIn, (req, res) => {
+    res.render('profile', { displayedUser: req.user });
   });
 
-  app.get('/logout', function (req, res) {
+  app.get('/profile/edit', isLoggedIn, (req, res) => {
+    res.render('edit', { message: req.flash('editProfileMessage') });
+  });
+
+  app.get('/profile/:aid(\\d+)', isLoggedIn, async (req, res) => {
+    res.render('profile', await profile.getTplObjectForProfile(req.params.aid));
+  });
+
+  app.get('/logout', (req, res) => {
     req.logout();
     res.redirect('/');
+  });
+
+  // 404 handler, must be last!
+  app.use((req, res, next) => {
+    return res.status(404).render('404', { url: req.url });
   });
 };

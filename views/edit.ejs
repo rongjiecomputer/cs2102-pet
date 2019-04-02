@@ -1,0 +1,111 @@
+<%- include('header', {title: 'Edit Profile'}); -%>
+<main class="container">
+
+  <% if (message.length > 0) { %>
+  <div class="alert alert-danger"><%= message %></div>
+  <% } %>
+
+  <!-- Change Password -->
+  <!-- Button -->
+  <button type="button" id="pwdBtn" class="btn btn-primary" data-toggle="modal" data-target="#pwdModal">
+    Change Password
+  </button>
+
+  <!-- Modal -->
+  <div class="modal fade" id="pwdModal" tabindex="-1" role="dialog" aria-labelledby="pwdModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="pwdModalLabel">Change Password</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action="/edit" method="POST">
+            <label class="font-weight-bold"><b>Old Password</b></label>
+            <input class="form-control" type="password" placeholder="Enter Old Password" name="oldPwd"
+              autocomplete="current-password" required>
+
+            <label class="font-weight-bold"><b>New Password</b></label>
+            <input class="form-control" type="password" placeholder="Enter New Password" name="newPwd"
+              autocomplete="new-password" required>
+
+            <label class="font-weight-bold"><b>Confirm New Password</b></label>
+            <input class="form-control" type="password" placeholder="Confirm New Password" name="cfmNewPwd"
+              autocomplete="new-password" required>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success">Submit</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Change Email -->
+  <!-- Button -->
+  <button type="button" id="emailBtn" class="btn btn-primary" data-toggle="modal" data-target="#emailModal">
+    Change Email
+  </button>
+
+  <!-- Modal -->
+  <div class="modal fade" id="emailModal" tabindex="-1" role="dialog" aria-labelledby="emailModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="emailModalLabel">Change Email</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action="/edit" method="POST">
+            <label class="font-weight-bold"><b>New Email</b></label>
+            <input class="form-control" type="email" placeholder="Enter New Email" name="newEmail" required>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success">Submit</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Change Phone -->
+  <!-- Button -->
+  <button type="button" id="phoneBtn" class="btn btn-primary" data-toggle="modal" data-target="#phoneModal">
+    Change Phone
+  </button>
+
+  <!-- Modal -->
+  <div class="modal fade" id="phoneModal" tabindex="-1" role="dialog" aria-labelledby="phoneModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="phoneModalLabel">Change Phone</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action="/edit" method="POST">
+            <label class="font-weight-bold"><b>New Phone</b></label>
+            <input class="form-control" type="tel" placeholder="Enter New Phone" name="newPhone" required>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success">Submit</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<%- include('footer'); -%>
