@@ -1,4 +1,6 @@
 const profile = require('./profile');
+const edit = require('./edit');
+const db = require('../db');
 
 // route middleware to make sure a user is logged in
 function isLoggedIn(req, res, next) {
@@ -38,6 +40,16 @@ module.exports = (app, passport) => {
 
   app.get('/profile/edit', isLoggedIn, (req, res) => {
     res.render('edit', { message: req.flash('editProfileMessage') });
+  });
+
+  app.post('/edit/email', async (req, res) => {
+    await edit.setEmail(req.user.aid, req.body.newEmail);
+    res.redirect('/profile');
+  });
+
+  app.post('/edit/phone', async (req, res) => {
+    await edit.setPhone(req.user.aid, req.body.newPhone);
+    res.redirect('/profile');
   });
 
   app.get('/profile/:aid(\\d+)', isLoggedIn, async (req, res) => {
