@@ -25,6 +25,8 @@ class Cache {
 Cache.cache = new Map();
 Cache.REGION = 'Region';
 Cache.SERVICE_TYPE = 'ServiceType';
+Cache.MEDICAL_COND = 'MedicalCondition';
+Cache.BREED = 'Breed';
 
 module.exports = (app, passport) => {
   app.get('/', (req, res) => {
@@ -56,14 +58,21 @@ module.exports = (app, passport) => {
     res.render('profile', { displayedUser: req.user });
   });
 
+
+  app.get('/records', isLoggedIn, (req, res) => {
+    console.log(req.user);
+    res.render('records', { displayedUser: req.user });
+  });
+
   // Edit Page (Start)
+
     app.get('/profile/edit', isLoggedIn, (req, res) => {
     res.render('edit', { message: req.flash('editProfileMessage') });
   });
 
   app.post('/edit/password', async (req, res) => {
     const isSame = await edit.checkPassword(req.user.aid, req.body.oldPwd, req.user.hash);
-    if (isSame){
+    if (isSame) {
       await edit.setPassword(req.user.aid, req.body.newPwd, req.user.hash);
       res.redirect('/profile');
     }
@@ -87,14 +96,14 @@ module.exports = (app, passport) => {
 
   // Pets Page (Start)
   app.get('/profile/pets', isLoggedIn, async (req, res) => {
-    const data = await pets.displayPets(req.user.aid);
-    res.render('pets', { displayedUser: req.user, pets: data});
+    const petsData = await pets.displayPets(req.user.aid);
+    res.render('pets', { displayedUser: req.user, pets: petsData});
   });
 
   app.post('/pets/add', async (req, res) => {
     await pets.addPet(req.user.aid, req.body.petName, req.body.petWeight,req.body.petBday, req.body.petBreed,
         req.body.petMC, req.body.petRemarks);
-    res.redirect('/profile');
+    res.redirect('/profile/pets');
   });
   // Pets Page (End)
 
@@ -145,18 +154,29 @@ module.exports = (app, passport) => {
       }
     }
 
+    if (checkNotEmpty(req.query.dateStart)) {
+      where_clauses.push(`S.dateStart <= $${next_placeholder_id++}`);
+      objs.push(req.query.dateStart);
+    }
+    if (checkNotEmpty(req.query.dateEnd)) {
+      where_clauses.push(`S.dateEnd >= $${next_placeholder_id++}`);
+      objs.push(req.query.dateEnd);
+    }
+
     if (where_clauses.length > 0) {
       query_s += ' WHERE ';
       query_s += where_clauses.join(' AND ');
     }
 
     if (checkNotEmpty(req.query.sort)) {
-      if (req.query.sort === 'lowPrice') {
-        query_s += ' ORDER BY S.price';
-      } else if (req.query.sort === 'highPrice') {
+      if (req.query.sort === 'highPrice') {
         query_s += ' ORDER BY S.price DESC';
+      } else {
+        query_s += ' ORDER BY S.price';
       }
     }
+
+    query_s += ' GROUP BY S.aid, S.serviceType';
 
     const client = await db.connect();
     try {
@@ -167,6 +187,17 @@ module.exports = (app, passport) => {
       res.render('service', { results, regions, serviceTypes });
     } finally {
       client.release();
+    }
+  });
+
+  app.get('/api/service/request', isLoggedIn, async (req, res) => {
+    try {
+      console.log(req.query);
+      res.status(200).send({
+        success: true,
+      });
+    } catch(e) {
+
     }
   });
 

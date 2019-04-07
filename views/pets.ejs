@@ -1,4 +1,6 @@
-<%- include('header', {title: 'Pets'}); -%>
+<%-
+include('header', {title: 'Pets'});
+-%>
 
 <main class="container">
 
@@ -80,7 +82,7 @@
                     <th scope="row"><%= index+1 %></th>
                     <td><%= pets.rows[index].name %></td>
                     <td><%= pets.rows[index].weight %></td>
-                    <td><%= pets.rows[index].birthday %></td>
+                    <td><%= JSON.stringify(pets.rows[index].birthday).slice(1,11) %></td>
                     <td><%= pets.rows[index].breed %></td>
                     <td><%= pets.rows[index].medicalcondition %></td>
                     <td><%= pets.rows[index].remark %></td>
@@ -93,4 +95,6 @@
         <!-- Display Pet (End)-->
     <% } %>
 </main>
+
+<script type="text/javascript" src="../routes/pets.js"></script>
 <%- include('footer'); -%>
