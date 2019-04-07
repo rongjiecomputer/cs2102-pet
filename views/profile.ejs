@@ -6,10 +6,18 @@
   <div class="alert alert-danger">Profile not found.</div>
   <% } else { %>
     <div class="text-center">
-      <img src="images/placeholder.png" class="rounded-circle" style="width:250px;height:200px;" >
+        <%if (displayedUser.isPetOwner) {%>
+        <!--if petowner-->
+        <img src="images/petowner.png" class="rounded-circle" style=" object-fit: cover;
+        border-radius: 50%;height: 300px;width: 300px;" >
+        <% } else { %>
+        <!--if caretaker-->
+        <img src="images/caretaker.png" class="rounded-circle" style=" object-fit: cover;
+        border-radius: 50%;height: 300px;width: 300px;" >
+        <% } %>
         <br>
         <p>Name: <%= displayedUser.name %></p>
-        <%if (true) {%>
+        <%if (displayedUser.isPetOwner) {%>
         <!-- if petOwner -->
         <a role = "button" class="btn disabled btn-primary">PetOwner</a>
         <br>
@@ -32,19 +40,45 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        insert the forms for setting up a request here: ie: what pet: what service. how long
+                        <form method="post">
+                            <select class="custom-select">
+                                <option selected="true" disabled="disabled" >Select your pet</option>
+                                <option value="1">dog1</option>
+                                <option value="2">dog2</option>
+                                <option value="3">dog3</option>
+                            </select>
+                            <br>
+                            <br>
+                            <select class="custom-select">
+                                <option selected="true" disabled="disabled" >Select a service type</option>
+                                <option value="1">dog1</option>
+                                <option value="2">dog2</option>
+                                <option value="3">dog3</option>
+                            </select>
+                            <br>
+                            <br>
+                            <input type="number" class="form-control" id="MaxPrice" min= "0" placeholder="Max Price in dollars">
+                            <br>
+                            <label>Start Date</label>
+                            <input class = "form-control" placeholder="Start Date" type="date" name="StartDate">
+                            <br>
+                            <label>End Date</label>
+                            <input class = "form-control" placeholder="End Date" type="date" name="StartDate">
+
+                        </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary">Save changes</button>
+                        <button type="button" class="btn btn-primary">Advertise Request!</button>
                     </div>
                 </div>
             </div>
         </div>
-        <a role = "button" class="btn btn-warning" onclick="location.href='/profile/edit';">See your advertised requests</a>
+        <a role = "button" class="btn btn-warning" href='/profile/edit'>See your advertised requests</a>
         <br>
         <br>
 
-        <a role = "button" class="btn btn-danger" onclick="location.href='/profile/edit';">Search for a service</a>
+        <a role = "button" class="btn btn-danger" href="/service">Search for a service</a>
+
         <% } else {%>
         <!-- if caretaker -->
         <a role = "button" class="btn disabled btn-danger">CareTaker</a>
@@ -67,19 +101,37 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        insert the forms for setting up a service here: ie: what pet: what service. how long
+                        <form method="post">
+
+                            <select class="custom-select">
+                                <option selected="true" disabled="disabled" >Select a service type</option>
+                                <option value="1">dog1</option>
+                                <option value="2">dog2</option>
+                                <option value="3">dog3</option>
+                            </select>
+                            <br>
+                            <br>
+                            <input type="number" class="form-control" id="MaxPrice" min= "0" placeholder="Max Price in dollars">
+                            <br>
+                            <label>Start Date</label>
+                            <input class = "form-control" placeholder="Start Date" type="date" name="StartDate">
+                            <br>
+                            <label>End Date</label>
+                            <input class = "form-control" placeholder="End Date" type="date" name="StartDate">
+
+                        </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary">Save changes</button>
+                        <button type="button" class="btn btn-primary">Advertise Service!</button>
                     </div>
                 </div>
             </div>
         </div>
-        <a role = "button" class="btn btn-warning" onclick="location.href='/profile/edit';">See your advertised services</a>
+        <a role = "button" class="btn btn-warning" href='/profile/edit'>See your advertised services</a>
         <br>
         <br>
 
-        <a role = "button" class="btn btn-danger" onclick="location.href='/profile/edit';">Search for a job</a>
+        <a role = "button" class="btn btn-danger" href='/requests'>Search for a job</a>
         <%}%>
         <br>
         <br>
@@ -89,11 +141,11 @@
           <p>Phone: <%= displayedUser.phone %></p>
           <p>Email: <%= displayedUser.email %></p>
 
-            <%if(true) {%>
+            <%if(user.aid==displayedUser.aid) {%>
             <!-- if owner of profile -->
             <a role = "button" class="btn btn-info" onclick="location.href='/profile/edit';">Edit your profile</a>
             <%}%>
-            <%if(true) {%>
+            <%if(displayedUser.isPetOwner) {%>
             <!-- if petOwner -->
             <a role = "button" class="btn btn-success" onclick="location.href='/displayPets';">show/add your pets!</a>
             <%}%>
