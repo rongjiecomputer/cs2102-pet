@@ -73,7 +73,8 @@ CREATE TABLE Availability(
   aid INTEGER NOT NULL, -- CareTaker
   dateStart DATE NOT NULL, -- yyyy-mm-dd format
   dateEnd DATE NOT NULL,
-  FOREIGN KEY(aid) REFERENCES Account
+  FOREIGN KEY(aid) REFERENCES Account,
+  CHECK(dateStart <= dateEnd)
 );
 
 CREATE TABLE ServiceType(
@@ -215,9 +216,32 @@ FOR EACH ROW
 EXECUTE PROCEDURE is_petowner();
 
 /**
- * Constraint 4: No overlapping [dateStart, dateEnd].
+ * Constraint 4: No overlapping availability [dateStart, dateEnd].
+ * Pre-cond: there are no overlaps before this insert/update operation.
  */
+CREATE OR REPLACE FUNCTION no_overlapping()
+RETURNS TRIGGER AS
+$$
+DECLARE count NUMERIC;
+BEGIN
+  SELECT COUNT (*) INTO count
+  FROM Availability A
+  WHERE (A.dateStart <= NEW.dateStart AND NEW.dateStart <= A.dateEnd) 
+     OR (A.dateStart <= NEW.dateEnd AND NEW.dateEnd <= A.dateEnd);
+  IF count > 0 THEN
+    RETURN NULL
+  ELSE
+    RETURN NEW;
+  END IF;
+END;
+$$
+LANGUAGE plpgsql;
 
+CREATE TRIGGER detect_overlapping
+BEFORE INSERT OR UPDATE
+ON Availability
+FOR EACH ROW
+EXECUTE PROCEDURE no_overlapping();
 
 /**
  * Pre-populated values.
