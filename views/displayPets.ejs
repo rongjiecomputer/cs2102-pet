@@ -1,0 +1,44 @@
+<%- include('header', {title: 'Profile'}); -%>
+
+<main class="container">
+
+<button type="button" id="pwdBtn" class="btn-success" data-toggle="modal" data-target="#pwdModal">
+  Change Password
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="pwdModal" tabindex="-1" role="dialog" aria-labelledby="pwdModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="pwdModalLabel">Change Password</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="/edit" method="POST">
+          <label class="font-weight-bold"><b>Old Password</b></label>
+          <input class="form-control" type="password" placeholder="Enter Old Password" name="oldPwd"
+                 autocomplete="current-password" required>
+
+          <label class="font-weight-bold"><b>New Password</b></label>
+          <input class="form-control" type="password" placeholder="Enter New Password" name="newPwd"
+                 autocomplete="new-password" required>
+
+          <label class="font-weight-bold"><b>Confirm New Password</b></label>
+          <input class="form-control" type="password" placeholder="Confirm New Password" name="cfmNewPwd"
+                 autocomplete="new-password" required>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success">Submit</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+<%- include('footer'); -%>
