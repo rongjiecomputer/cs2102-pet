@@ -14,7 +14,7 @@ module.exports = (app, passport) => {
     res.render('index');
   });
 
-  app.get('/signup', (req, res) => {
+  app.get('/signup', async (req, res) => {
     const regions = (await db.query('SELECT * FROM Region')).rows;
     res.render('signup', { message: req.flash('signupMessage'), regions });
   });
