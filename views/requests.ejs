@@ -1,82 +1,126 @@
-<%- include('header', {title: 'Services'}); -%>
+<%- include('header', {title: 'Requests '}); -%>
 
-<div class="row">
+<div class="container-fluid vertical-stretch">
+  <div class="row vertical-stretch">
 
-  <nav class="col-md-4 d-md-block bg-primary text-white vertical-stretch">
-    <div class="px-2 py-3">
+    <nav class="col-md-4 d-md-block bg-primary text-white vertical-stretch">
+      <div class="px-2 py-3">
 
-      <form action="/service" method="GET">
-        <h3>Filter</h3>
+        <form action="/service" method="GET">
+          <h3>Filter</h3>
 
-        <div class="form-group">
-          <label>Care taker name</label>
-          <input type="text" class="form-control" name="name">
-        </div>
-
-        <div class="form-group">
-          <label>Service type</label>
-          <select class="form-control" name="serviceType">
-            <option value="-1">Any</option>
-            <% for (const row of regions) { %>
-            <option value="<%= row.serviceType %>"><%= row.name %></option>
-            <% } %>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>Price (SGD)</label>
-          <div class="input-group mb-3">
-            <select class="form-control" name="priceCompare">
-              <option value="eq">Equal</option>
-              <option value="lt">Less than</option>
-              <option value="lt">Greater than</option>
-            </select>
-            <input type="number" class="form-control" min="0" name="price">
+          <div class="form-group">
+            <label>Care taker name</label>
+            <input type="text" class="form-control" name="name">
           </div>
-        </div>
 
-        <div class="form-group">
-          <label>Care taker region</label>
-          <select class="form-control" name="region">
-            <option value="-1">Any</option>
-            <% for (const row of regions) { %>
-            <option value="<%= row.region %>"><%= row.name %></option>
+          <div class="form-group">
+            <label>Service type</label>
+            <select class="form-control" name="serviceType">
+              <option value="-1">Any</option>
+              <% for (const row of serviceTypes) { %>
+              <option value="<%= row.servicetype %>"><%= row.name %></option>
+              <% } %>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Price (SGD)</label>
+            <div class="input-group mb-3">
+              <select class="form-control" name="priceCompare">
+                <option value="eq">Equal</option>
+                <option value="lt">Less than</option>
+                <option value="gt">Greater than</option>
+              </select>
+              <input type="number" class="form-control" min="0" name="price">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Care taker region</label>
+            <select class="form-control" name="region">
+              <option value="-1">Any</option>
+              <% for (const row of regions) { %>
+              <option value="<%= row.region %>"><%= row.name %></option>
+              <% } %>
+            </select>
+          </div>
+
+
+          <div class="form-group">
+            <label>Availability</label>
+            <div class="input-group mb-3">
+              <input type="date" class="form-control" name="dateStart">
+              <input type="date" class="form-control" name="dateEnd">
+            </div>
+          </div>
+
+          <hr>
+
+          <h3>Sort by</h3>
+
+          <div class="form-group">
+            <label>Care taker region</label>
+            <select class="form-control" name="sort">
+              <option value="lowPrice">Lowest price first</option>
+              <option value="highPrice">Highest price first</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-warning btn-lg">Search</button>
+        </form>
+      </div>
+    </nav>
+
+    <main class="col-md-8 px-4">
+      <h2>Available services</h2>
+      <% if (results.length == 0) { %>
+      <div class="">No result found.</div>
+      <% } else { %>
+      <div class="table-responsive">
+        <table class="table-striped">
+          <thead>
+          <th>Name</th>
+          <th>Service Type</th>
+          <th>Price (SGD)</th>
+          <th>Start date</th>
+          <th>End date</th>
+          <% if (user.isPetOwner) { %><th>Action</th><% } %>
+          </thead>
+          <tbody>
+          <% for (const row of results) { %>
+          <tr>
+            <td><%= row.name %></td>
+            <td><%= serviceTypes[row.servicetype - 1].name %></td>
+            <td><%= row.price %></td>
+            <td><%= row.datestart.toLocaleDateString() %></td>
+            <td><%= row.dateend.toLocaleDateString() %></td>
+            <% if (user.isPetOwner) { %>
+            <td><button class="btn-primary" data-sid="<%= row.sid %>">Request</button></td>
             <% } %>
-          </select>
-        </div>
-
-        <hr>
-
-        <h3>Sort by</h3>
-
-        <div class="form-group">
-          <label>Care taker region</label>
-          <select class="form-control" name="sort">
-            <option value="lowPrice">Lowest price first</option>
-            <option value="highPrice">Highest price first</option>
-          </select>
-        </div>
-
-        <button type="submit" class="btn btn-warning btn-lg">Search</button>
-      </form>
-    </div>
-  </nav>
-
-  <main class="col-md-8 px-4">
-    <h2>Result</h2>
-    <% if (results.length == 0) %>
-    <div class="">No result found.</div>
-    <% } else { %>
-    <div class="table-responsive">
-      <% for (const row of results) { %>
-      <div class="card">
-        <div class="card-header">Header</div>
-        <div class="card-body">Content</div>
+          </tr>
+          <% } %>
+          </tbody>
+        </table>
       </div>
       <% } %>
-    </div>
-    <% } %>
-  </main>
+
+    </main>
+  </div>
 </div>
+
+<script>
+    (function () {
+        const trs = document.querySelectorAll('tbody > tr');
+        for (const tr of trs) {
+            const btn = tr.querySelector('button');
+            btn.addEventListener('click', async (e) => {
+                const res = await fetch('/api/service/request?sid=' + btn.dataset.sid);
+                const json = await res.json();
+
+            });
+        }
+    })();
+</script>
 
 <%- include('footer'); -%>

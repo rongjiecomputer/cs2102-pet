@@ -188,6 +188,85 @@ module.exports = (app, passport) => {
     }
   });
 
+  app.get('/requests', isLoggedIn, async (req, res) => {
+      function checkNotEmpty(x) {
+          return typeof x === 'string' && x !== '';
+      }
+
+      let query_s = "SELECT S.*, A.name FROM Service S JOIN Account A ON S.aid = A.aid";
+      let next_placeholder_id = 1;
+      let where_clauses = [];
+      let objs = [];
+
+      if (checkNotEmpty(req.query.name)) {
+          where_clauses.push(`A.name = $${next_placeholder_id++}`);
+          objs.push(req.query.name);
+      }
+
+      if (checkNotEmpty(req.query.serviceType)) {
+          let x = Number.parseInt(req.query.serviceType);
+          if (x != -1) {
+              where_clauses.push(`S.serviceType = $${next_placeholder_id++}`);
+              objs.push(x);
+          }
+      }
+
+      if (checkNotEmpty(req.query.priceCompare) && checkNotEmpty(req.query.price)) {
+          let x = Number.parseInt(req.query.price);
+          let op = '=';
+          switch (req.query.priceCompare) {
+              case 'eq': op = '='; break;
+              case 'lt': op = '<'; break;
+              case 'gt': op = '>'; break;
+          }
+          where_clauses.push(`S.price ${op} $${next_placeholder_id++}`);
+          objs.push(x);
+      }
+
+      if (checkNotEmpty(req.query.region)) {
+          let x = Number.parseInt(req.query.region);
+          if (x != -1) {
+              where_clauses.push(`A.region = $${next_placeholder_id++}`);
+              objs.push(x);
+          }
+      }
+
+      if (checkNotEmpty(req.query.dateStart)) {
+          where_clauses.push(`S.dateStart <= $${next_placeholder_id++}`);
+          objs.push(req.query.dateStart);
+      }
+      if (checkNotEmpty(req.query.dateEnd)) {
+          where_clauses.push(`S.dateEnd >= $${next_placeholder_id++}`);
+          objs.push(req.query.dateEnd);
+      }
+
+      if (where_clauses.length > 0) {
+          query_s += ' WHERE ';
+          query_s += where_clauses.join(' AND ');
+      }
+
+      if (checkNotEmpty(req.query.sort)) {
+          if (req.query.sort === 'highPrice') {
+              query_s += ' ORDER BY S.price DESC';
+          } else {
+              query_s += ' ORDER BY S.price';
+          }
+      }
+
+      query_s += ' GROUP BY S.aid, S.serviceType';
+
+      const client = await db.connect();
+      try {
+          const results = (await client.query(query_s, objs)).rows;
+          const regions = await Cache.getRows(Cache.REGION);
+          const serviceTypes = await Cache.getRows(Cache.SERVICE_TYPE);
+
+          res.render('requests', { results, regions, serviceTypes });
+      } finally {
+          client.release();
+      }
+  });
+
   app.get('/api/service/request', isLoggedIn, async (req, res) => {
     try {
       console.log(req.query);
@@ -218,8 +297,8 @@ module.exports = (app, passport) => {
 
       let query_ad = "SELECT A.name,ST.name as serviceName,CTR.dateAccepted " +
           "FROM CareTakerRecords CTR " +
-          "JOIN Account A ON A.aid=CTR.petOwnerID " +
-          "JOIN ServiceRequest SR ON S.srid = CTR.srid " +
+          "JOIN Account A ON A.aid = CTR.petOwnerID " +
+          "JOIN ServiceRequest SR ON SR.srid = CTR.srid " +
           "JOIN ServiceType ST ON ST.serviceType = SR.serviceType " +
           `WHERE CTR.careTakerID = ${req.user.aid}`;
 
