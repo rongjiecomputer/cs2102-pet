@@ -25,6 +25,8 @@ class Cache {
 Cache.cache = new Map();
 Cache.REGION = 'Region';
 Cache.SERVICE_TYPE = 'ServiceType';
+Cache.MEDICAL_COND = 'MedicalCondition';
+Cache.BREED = 'Breed';
 
 module.exports = (app, passport) => {
   app.get('/', (req, res) => {
@@ -63,7 +65,7 @@ module.exports = (app, passport) => {
 
   app.post('/edit/password', async (req, res) => {
     const isSame = await edit.checkPassword(req.user.aid, req.body.oldPwd, req.user.hash);
-    if (isSame){
+    if (isSame) {
       await edit.setPassword(req.user.aid, req.body.newPwd, req.user.hash);
       res.redirect('/profile');
     }
@@ -145,18 +147,29 @@ module.exports = (app, passport) => {
       }
     }
 
+    if (checkNotEmpty(req.query.dateStart)) {
+      where_clauses.push(`S.dateStart <= $${next_placeholder_id++}`);
+      objs.push(req.query.dateStart);
+    }
+    if (checkNotEmpty(req.query.dateEnd)) {
+      where_clauses.push(`S.dateEnd >= $${next_placeholder_id++}`);
+      objs.push(req.query.dateEnd);
+    }
+
     if (where_clauses.length > 0) {
       query_s += ' WHERE ';
       query_s += where_clauses.join(' AND ');
     }
 
     if (checkNotEmpty(req.query.sort)) {
-      if (req.query.sort === 'lowPrice') {
-        query_s += ' ORDER BY S.price';
-      } else if (req.query.sort === 'highPrice') {
+      if (req.query.sort === 'highPrice') {
         query_s += ' ORDER BY S.price DESC';
+      } else {
+        query_s += ' ORDER BY S.price';
       }
     }
+
+    query_s += ' GROUP BY S.aid, S.serviceType';
 
     const client = await db.connect();
     try {
@@ -167,6 +180,17 @@ module.exports = (app, passport) => {
       res.render('service', { results, regions, serviceTypes });
     } finally {
       client.release();
+    }
+  });
+
+  app.get('/api/service/request', isLoggedIn, async (req, res) => {
+    try {
+      console.log(req.query);
+      res.status(200).send({
+        success: true,
+      });
+    } catch(e) {
+
     }
   });
 
