@@ -5,7 +5,8 @@
  */
 
 DROP TABLE IF EXISTS ServiceRequest, Service, ServiceType, Pet,
-  MedicalCondition, Breed, PetOwner, CareTaker, Account, Region CASCADE;
+  MedicalCondition, Breed, PetOwner, CareTaker, Account, Region ,PetMedicalCondition,
+   CareTakerRecords,PetOwnerRecords CASCADE;
 
 CREATE TABLE Region(
   region SERIAL,
@@ -60,14 +61,13 @@ CREATE TABLE Pet(
   remark TEXT, -- Optional
   PRIMARY KEY(aid, name),
   FOREIGN KEY(aid) REFERENCES Account,
-  FOREIGN KEY(breed) REFERENCES Breed,
-  FOREIGN KEY(medicalCondition) REFERENCES MedicalCondition
+  FOREIGN KEY(breed) REFERENCES Breed
 );
 
 CREATE TABLE PetMedicalCondition(
   aid INTEGER NOT NULL, -- PetOwner
   name varchar(50) NOT NULL, --name of pet
-  medicalCondition NOT NULL,
+  medicalCondition INTEGER NOT NULL,
   PRIMARY KEY(aid,name,medicalCondition),
   FOREIGN KEY(aid,name) REFERENCES Pet,
   FOREIGN KEY(medicalCondition) REFERENCES MedicalCondition
@@ -99,7 +99,6 @@ CREATE TABLE Service(
 
 CREATE TABLE ServiceRequest(
   srid SERIAL,
-
   aid INTEGER NOT NULL, -- PetOwner
   petName VARCHAR(50) NOT NULL,
 
