@@ -92,14 +92,16 @@ module.exports = (app, passport) => {
 
   // Pets Page (Start)
   app.get('/profile/pets', isLoggedIn, async (req, res) => {
-    const data = await pets.displayPets(req.user.aid);
-    res.render('pets', { displayedUser: req.user, pets: data});
+    const petsData = await pets.displayPets(req.user.aid);
+    const breedData = await pets.getBreeds();
+    const mcData = await pets.getMC();
+    res.render('pets', { displayedUser: req.user, pets: petsData, breeds: breedData, mc: mcData});
   });
 
   app.post('/pets/add', async (req, res) => {
     await pets.addPet(req.user.aid, req.body.petName, req.body.petWeight,req.body.petBday, req.body.petBreed,
         req.body.petMC, req.body.petRemarks);
-    res.redirect('/profile');
+    res.redirect('/profile/pets');
   });
   // Pets Page (End)
 
@@ -198,7 +200,9 @@ module.exports = (app, passport) => {
   });
 
   app.get('/advertisedrequestservice', isLoggedIn, async (req, res) => {
+
     let query_ad = "SELECT S.*, A.name FROM Service S JOIN Account A ON S.aid = A.aid";
+
 
     console.log(query_ad);
 
