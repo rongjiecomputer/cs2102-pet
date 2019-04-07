@@ -4,7 +4,7 @@
  * "SERIAL" is a PostgreSQL pseudo-type that generates sequence of integer.
  */
 
-DROP TABLE IF EXISTS ServiceRequest, Service, ServiceType, Availability, Pet,
+DROP TABLE IF EXISTS ServiceRequest, Service, ServiceType, Pet,
   MedicalCondition, Breed, PetOwner, CareTaker, Account, Region CASCADE;
 
 CREATE TABLE Region(
@@ -16,7 +16,6 @@ CREATE TABLE Region(
 CREATE TABLE Account(
   aid SERIAL,
   name VARCHAR(100) NOT NULL,
-  username VARCHAR(50) NOT NULL,
   phone VARCHAR(16) NOT NULL,
   email VARCHAR(30) NOT NULL UNIQUE,
   address1 VARCHAR(100) NOT NULL,
@@ -66,17 +65,6 @@ CREATE TABLE Pet(
   FOREIGN KEY(medicalCondition) REFERENCES MedicalCondition
 );
 
-/**
- * CareTaker is available between [dateStart, dateEnd] inclusive.
- */
-CREATE TABLE Availability(
-  aid INTEGER NOT NULL, -- CareTaker
-  dateStart DATE NOT NULL, -- yyyy-mm-dd format
-  dateEnd DATE NOT NULL,
-  FOREIGN KEY(aid) REFERENCES Account,
-  CHECK(dateStart <= dateEnd)
-);
-
 CREATE TABLE ServiceType(
   serviceType SERIAL,
   name varchar(50) NOT NULL,
@@ -86,11 +74,16 @@ CREATE TABLE ServiceType(
 CREATE TABLE Service(
   sid SERIAL,
   aid INTEGER NOT NULL, -- CareTaker
+
   serviceType INTEGER NOT NULL,
   price INTEGER NOT NULL,
+  dateStart DATE NOT NULL, -- yyyy-mm-dd format
+  dateEnd DATE NOT NULL,
+
   PRIMARY KEY(sid),
   FOREIGN KEY(aid) REFERENCES Account,
-  FOREIGN KEY(serviceType) REFERENCES ServiceType
+  FOREIGN KEY(serviceType) REFERENCES ServiceType,
+  CHECK(dateStart <= dateEnd)
 );
 
 CREATE TABLE ServiceRequest(
@@ -177,7 +170,7 @@ $$
 DECLARE count NUMERIC;
 BEGIN
   SELECT COUNT (*) INTO count
-  FROM PetOwner
+  FROM CareTaker
   WHERE NEW.aid = CareTaker.aid;
   IF count > 0 THEN
     RETURN NEW;
@@ -187,12 +180,6 @@ BEGIN
 END;
 $$
 LANGUAGE plpgsql;
-
-CREATE TRIGGER is_caretaker1
-BEFORE INSERT OR UPDATE
-ON Availability
-FOR EACH ROW
-EXECUTE PROCEDURE is_caretaker();
 
 CREATE TRIGGER is_caretaker2
 BEFORE INSERT OR UPDATE
@@ -230,7 +217,7 @@ EXECUTE PROCEDURE is_petowner();
  * Constraint 4: No overlapping availability [dateStart, dateEnd].
  * Pre-cond: there are no overlaps before this insert/update operation.
  */
-CREATE OR REPLACE FUNCTION no_overlapping()
+/*CREATE OR REPLACE FUNCTION no_overlapping()
 RETURNS TRIGGER AS
 $$
 DECLARE count NUMERIC;
@@ -252,14 +239,11 @@ CREATE TRIGGER detect_overlapping
 BEFORE INSERT OR UPDATE
 ON Availability
 FOR EACH ROW
-EXECUTE PROCEDURE no_overlapping();
+EXECUTE PROCEDURE no_overlapping();*/
 
 /**
  * Pre-populated values.
  */
-
-
-
 INSERT INTO Region (name) VALUES ('Central Region');
 INSERT INTO Region (name) VALUES ('East Region');
 INSERT INTO Region (name) VALUES ('North Region');
@@ -293,7 +277,6 @@ INSERT INTO Breed (name) VALUES ('Norwegian Forest Cat');
 INSERT INTO Breed (name) VALUES ('Bengal Cat');
 INSERT INTO Breed (name) VALUES ('Birman');
 INSERT INTO Breed (name) VALUES ('a Bird');
-
 
 INSERT INTO MedicalCondition (name) VALUES ('Arthritis');
 INSERT INTO MedicalCondition (name) VALUES ('Cancer');

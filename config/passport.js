@@ -59,9 +59,9 @@ module.exports = passport => {
 
       const hash = generateHash(password);
       const newData = await client.query(`INSERT INTO Account
-        (name, username, email, hash, phone, address1, address2, region, postalCode)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
-        [req.body.name, req.body.username, email, hash, req.body.phone,
+        (name, email, hash, phone, address1, address2, region, postalCode)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
+        [req.body.name, email, hash, req.body.phone,
         req.body.address1, req.body.address2, req.body.region, req.body.postalCode]);
       const user = newData.rows[0];
 

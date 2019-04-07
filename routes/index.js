@@ -53,7 +53,6 @@ module.exports = (app, passport) => {
   }));
 
   app.get('/profile', isLoggedIn, (req, res) => {
-    console.log(req.user);
     res.render('profile', { displayedUser: req.user });
   });
 
@@ -155,12 +154,9 @@ module.exports = (app, passport) => {
       if (req.query.sort === 'lowPrice') {
         query_s += ' ORDER BY S.price';
       } else if (req.query.sort === 'highPrice') {
-        query_s += ' ORDER BY S.price DESC'
+        query_s += ' ORDER BY S.price DESC';
       }
     }
-
-    console.log(query_s);
-    console.log(objs);
 
     const client = await db.connect();
     try {
@@ -169,6 +165,24 @@ module.exports = (app, passport) => {
       const serviceTypes = await Cache.getRows(Cache.SERVICE_TYPE);
 
       res.render('service', { results, regions, serviceTypes });
+    } finally {
+      client.release();
+    }
+  });
+
+  app.get('/advertisedrequestservice', isLoggedIn, async (req, res) => {
+    function checkNotEmpty(x) {
+      return typeof x === 'string' && x !== '';
+    }
+
+    let query_ad = "SELECT S.*, A.name FROM Service S JOIN Account A ON S.aid = A.aid";
+
+    console.log(query_ad);
+
+    const client = await db.connect();
+    try {
+      const results = (await client.query(query_ad)).rows;
+      res.render('advertisedrequestservice', { results });
     } finally {
       client.release();
     }
