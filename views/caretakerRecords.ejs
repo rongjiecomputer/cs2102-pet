@@ -1,0 +1,28 @@
+<%- include('header', {title: 'Previously Accepted Jobs'}); -%>
+<main class="container">
+    <h2>Your previously accepted jobs/h2>
+    <% if (results.length == 0) { %>
+    <div class="">No result found.</div>
+    <% } else { %>
+    <div class="table-responsive">
+        <table class="table-striped">
+            <thead>
+            <th>CareTaker Name</th>
+            <th>Service Type</th>
+            <th>Date Accepted</th>
+
+            </thead>
+            <tbody>
+            <% for (const row of results) { %>
+            <tr>
+                <td><%= row.name %></td>
+                <td><%= row.serviceName %></td>
+                <td><%= row.dateAccepted %></td>
+            </tr>
+            <% } %>
+            </tbody>
+        </table>
+    </div>
+    <% } %>
+</main>
+<%- include('footer'); -%>

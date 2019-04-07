@@ -59,10 +59,6 @@ module.exports = (app, passport) => {
   });
 
 
-  app.get('/records', isLoggedIn, (req, res) => {
-    console.log(req.user);
-    res.render('records', { displayedUser: req.user });
-  });
 
   // Edit Page (Start)
 
@@ -204,11 +200,9 @@ module.exports = (app, passport) => {
   });
 
   app.get('/advertisedrequestservice', isLoggedIn, async (req, res) => {
-    function checkNotEmpty(x) {
-      return typeof x === 'string' && x !== '';
-    }
 
-    let query_ad = `SELECT S.*, A.name FROM Service S JOIN Account A ON S.aid = A.aid WHERE ${req.user.aid} = A.aid`;
+    let query_ad = "SELECT S.*, A.name FROM Service S JOIN Account A ON S.aid = A.aid";
+
 
     console.log(query_ad);
 
@@ -219,6 +213,46 @@ module.exports = (app, passport) => {
     } finally {
       client.release();
     }
+  });
+
+  app.get('/caretakerRecords', isLoggedIn, async (req, res) => {
+
+      let query_ad = "SELECT A.name,ST.name as serviceName,CTR.dateAccepted " +
+          "FROM CareTakerRecords CTR " +
+          "JOIN Account A ON A.aid=CTR.petOwnerID " +
+          "JOIN ServiceRequest SR ON S.srid = CTR.srid " +
+          "JOIN ServiceType ST ON ST.serviceType = SR.serviceType " +
+          `WHERE CTR.careTakerID = ${req.user.aid}`;
+
+      console.log(query_ad);
+
+      const client = await db.connect();
+      try {
+          const results = (await client.query(query_ad)).rows;
+          res.render('caretakerRecords', { results });
+      } finally {
+          client.release();
+      }
+  });
+
+  app.get('/petownerRecords', isLoggedIn, async (req, res) => {
+
+      let query_ad = "SELECT A.name,ST.name as serviceName,POR.dateAccepted " +
+          "FROM PetOwnerRecords POR " +
+          "JOIN Account A ON A.aid=POR.careTakerID " +
+          "JOIN Service S ON S.sid = POR.sid " +
+          "JOIN ServiceType ST ON ST.serviceType = S.serviceType " +
+          `WHERE POR.petOwnerID = ${req.user.aid}`;
+
+      console.log(query_ad);
+
+      const client = await db.connect();
+      try {
+          const results = (await client.query(query_ad)).rows;
+          res.render('petownerRecords', { results });
+      } finally {
+          client.release();
+      }
   });
 
   app.get('/logout', (req, res) => {
