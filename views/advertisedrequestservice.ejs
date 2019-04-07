@@ -18,10 +18,10 @@
         <% for (const row of results) { %>
           <tr>
             <td><%= row.name %></td>
-            <td><%= row.serviceType %></td>
+            <td><%= serviceTypes[row.servicetype - 1].name %></td>
             <td><%= row.price %></td>
-            <td><%= row.dateStart %></td>
-            <td><%= row.dateEnd %></td>
+            <td><%= row.datestart.toLocaleDateString() %></td>
+            <td><%= row.dateend.toLocaleDateString() %></td>
           </tr>
         <% } %>
         </tbody>
