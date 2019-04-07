@@ -54,15 +54,19 @@ module.exports = (app, passport) => {
     failureFlash: true
   }));
 
-  app.get('/profile', isLoggedIn, (req, res) => {
-    res.render('profile', { displayedUser: req.user });
+  app.get('/profile', isLoggedIn, async (req, res) => {
+    const serviceTypes = await Cache.getRows(Cache.SERVICE_TYPE);
+    let pets = null;
+    if (req.user.isPetOwner) {
+      pets = (await db.query(`SELECT * FROM Pet where Pet.aid = $1`, [req.user.aid])).rows;
+    }
+    res.render('profile', { displayedUser: req.user, serviceTypes, pets });
   });
 
 
 
   // Edit Page (Start)
-
-    app.get('/profile/edit', isLoggedIn, (req, res) => {
+  app.get('/profile/edit', isLoggedIn, (req, res) => {
     res.render('edit', { message: req.flash('editProfileMessage') });
   });
 
@@ -99,8 +103,8 @@ module.exports = (app, passport) => {
   });
 
   app.post('/pets/add', async (req, res) => {
-    await pets.addPet(req.user.aid, req.body.petName, req.body.petWeight,req.body.petBday, req.body.petBreed,
-        req.body.petMC, req.body.petRemarks);
+    await pets.addPet(req.user.aid, req.body.petName, req.body.petWeight, req.body.petBday, req.body.petBreed,
+      req.body.petMC, req.body.petRemarks);
     res.redirect('/profile/pets');
   });
   // Pets Page (End)
@@ -174,7 +178,7 @@ module.exports = (app, passport) => {
       }
     }
 
-    query_s += ' GROUP BY S.aid, S.serviceType';
+    query_s += ' GROUP BY S.sid, S.aid, A.name, S.serviceType';
 
     const client = await db.connect();
     try {
@@ -194,7 +198,7 @@ module.exports = (app, passport) => {
       res.status(200).send({
         success: true,
       });
-    } catch(e) {
+    } catch (e) {
 
     }
   });

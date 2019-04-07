@@ -57,13 +57,22 @@ CREATE TABLE Pet(
   weight INTEGER NOT NULL,
   birthDay DATE NOT NULL,
   breed INTEGER NOT NULL,
-  medicalCondition INTEGER NOT NULL,
   remark TEXT, -- Optional
   PRIMARY KEY(aid, name),
   FOREIGN KEY(aid) REFERENCES Account,
   FOREIGN KEY(breed) REFERENCES Breed,
   FOREIGN KEY(medicalCondition) REFERENCES MedicalCondition
 );
+
+CREATE TABLE PetMedicalCondition(
+  aid INTEGER NOT NULL, -- PetOwner
+  name varchar(50) NOT NULL, --name of pet
+  medicalCondition NOT NULL,
+  PRIMARY KEY(aid,name,medicalCondition),
+  FOREIGN KEY(aid,name) REFERENCES Pet,
+  FOREIGN KEY(medicalCondition) REFERENCES MedicalCondition
+);
+
 
 CREATE TABLE ServiceType(
   serviceType SERIAL,
