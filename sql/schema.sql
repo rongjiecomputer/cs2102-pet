@@ -107,6 +107,26 @@ CREATE TABLE ServiceRequest(
   CHECK(dateStart <= dateEnd)
 );
 
+CREATE TABLE CareTakerRecords(
+  careTakerID INTEGER NOT NULL, -- CareTaker aid
+  petOwnerID INTEGER NOT NULL, -- PetOwner aid
+  srid INTEGER NOT NULL, -- Service Request ID
+  dateAccepted DATE DEFAULT CURRENT_DATE,
+  FOREIGN KEY(careTakerID) REFERENCES Account,
+  FOREIGN KEY(petOwnerID) REFERENCES Account,
+  FOREIGN KEY(srid) REFERENCES ServiceRequest
+);
+
+CREATE TABLE PetOwnerRecords(
+  petOwnerID INTEGER NOT NULL, -- PetOwner aid
+  careTakerID INTEGER NOT NULL, -- CareTaker aid
+  sid INTEGER NOT NULL, -- Service Request ID
+  dateAccepted DATE DEFAULT CURRENT_DATE,
+  FOREIGN KEY(careTakerID) REFERENCES Account,
+  FOREIGN KEY(petOwnerID) REFERENCES Account,
+  FOREIGN KEY(sid) REFERENCES Service
+);
+
 /**
  * Triggers
  */
