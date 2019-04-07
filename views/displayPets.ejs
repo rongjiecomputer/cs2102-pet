@@ -1,41 +1,48 @@
-<%- include('header', {title: 'Profile'}); -%>
+<%- include('header', {title: 'Display Pets'}); -%>
 
 <main class="container">
 
-<button type="button" id="pwdBtn" class="btn-success" data-toggle="modal" data-target="#pwdModal">
-  Change Password
+<!-- Modal Button -->
+<button type="button" id="addPetBtn" class="btn btn-primary" data-toggle="modal" data-target="#addPetModal">
+  Add Pet
 </button>
 
 <!-- Modal -->
-<div class="modal fade" id="pwdModal" tabindex="-1" role="dialog" aria-labelledby="pwdModalLabel"
+<div class="modal fade" id="addPetModal" tabindex="-1" role="dialog" aria-labelledby="addPetModalLabel"
      aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="pwdModalLabel">Change Password</h5>
+        <h5 class="modal-title" id="addPetModalLabel">Add Pet</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
-        <form action="/edit" method="POST">
-          <label class="font-weight-bold"><b>Old Password</b></label>
-          <input class="form-control" type="password" placeholder="Enter Old Password" name="oldPwd"
-                 autocomplete="current-password" required>
+      <form action="/displayPets/add" method="POST">
+        <div class="modal-body">
+          <label class="font-weight-bold"><b>Name</b></label>
+          <input class="form-control" type="text" placeholder="Enter Name" name="petName" required>
 
-          <label class="font-weight-bold"><b>New Password</b></label>
-          <input class="form-control" type="password" placeholder="Enter New Password" name="newPwd"
-                 autocomplete="new-password" required>
+          <label class="font-weight-bold"><b>Weight</b></label>
+          <input class="form-control" type="number" placeholder="Enter Weight" name="petWeight" required>
 
-          <label class="font-weight-bold"><b>Confirm New Password</b></label>
-          <input class="form-control" type="password" placeholder="Confirm New Password" name="cfmNewPwd"
-                 autocomplete="new-password" required>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-success">Submit</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-      </div>
+          <label class="font-weight-bold"><b>Birthday</b></label>
+          <input class="form-control" type="date" placeholder="Enter Birthday" name="petBday" required>
+
+          <label class="font-weight-bold"><b>Breed</b></label>
+          <input class="form-control" type="number" placeholder="Enter Breed" name="petBreed" required>
+
+          <label class="font-weight-bold"><b>Medical Condition</b></label>
+          <input class="form-control" type="number" placeholder="Enter Medical Condition" name="petMC" required>
+
+          <label class="font-weight-bold"><b>Remarks</b></label>
+          <input class="form-control" type="text" placeholder="Enter Remarks (Optional)" name="petRemarks">
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">Submit</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
