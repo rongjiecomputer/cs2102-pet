@@ -80,6 +80,8 @@ CREATE TABLE Service(
   dateStart DATE NOT NULL, -- yyyy-mm-dd format
   dateEnd DATE NOT NULL,
 
+  acceptedBy INTEGER, --PetOwner id if accepted
+
   PRIMARY KEY(sid),
   FOREIGN KEY(aid) REFERENCES Account,
   FOREIGN KEY(serviceType) REFERENCES ServiceType,
@@ -307,6 +309,7 @@ INSERT INTO MedicalCondition (name) VALUES ('Gastric Bloat');
 INSERT INTO MedicalCondition (name) VALUES ('Heartworm');
 INSERT INTO MedicalCondition (name) VALUES ('Too Fat');
 INSERT INTO MedicalCondition (name) VALUES ('Too Thin');
+INSERT INTO MedicalCondition (name) VALUES ('None');
 
 INSERT INTO ServiceType (name) VALUES ('Pet Walking');
 INSERT INTO ServiceType (name) VALUES ('Pet Grooming');
