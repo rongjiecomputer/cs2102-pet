@@ -24,8 +24,8 @@ module.exports = passport => {
 
   // used to deserialize the user
   passport.deserializeUser(async (id, done) => {
+    const client = await db.connect();
     try {
-      const client = await db.connect();
       const user = (await client.query('SELECT * FROM Account WHERE aid = $1', [id])).rows[0];
       user.isPetOwner = (await client.query('SELECT 1 FROM PetOwner WHERE aid = $1', [id])).rowCount > 0;
       user.isCareTaker = (await client.query('SELECT 1 FROM CareTaker WHERE aid = $1', [id])).rowCount > 0;
