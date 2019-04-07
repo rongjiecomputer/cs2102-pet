@@ -50,6 +50,20 @@ For Windows
 psql -U %POSTGRES_USERNAME% -f sql/schema.sql
 ```
 
+### Add some dummy data
+
+For Unix
+
+```bash
+psql -U $POSTGRES_USERNAME -f sql/dummy.sql
+```
+
+For Windows
+
+```
+psql -U %POSTGRES_USERNAME% -f sql/dummy.sql
+```
+
 ## Run server
 
 ```bash
