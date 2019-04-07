@@ -150,12 +150,9 @@ module.exports = (app, passport) => {
       if (req.query.sort === 'lowPrice') {
         query_s += ' ORDER BY S.price';
       } else if (req.query.sort === 'highPrice') {
-        query_s += ' ORDER BY S.price DESC'
+        query_s += ' ORDER BY S.price DESC';
       }
     }
-
-    console.log(query_s);
-    console.log(objs);
 
     const client = await db.connect();
     try {
