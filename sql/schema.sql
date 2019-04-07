@@ -73,6 +73,7 @@ CREATE TABLE PetMedicalCondition(
   FOREIGN KEY(medicalCondition) REFERENCES MedicalCondition
 );
 
+
 CREATE TABLE ServiceType(
   serviceType SERIAL,
   name varchar(50) NOT NULL,
