@@ -161,6 +161,77 @@ module.exports = (app, passport) => {
     }
   });
 
+  app.get('/advertisedrequest', isLoggedIn, async (req, res) => {
+    function checkNotEmpty(x) {
+      return typeof x === 'string' && x !== '';
+    }
+
+    let query_s = "SELECT S.*, A.name FROM Service S JOIN Account A ON S.aid = A.aid";
+    let next_placeholder_id = 1;
+    let where_clauses = [];
+    let objs = [];
+
+    if (checkNotEmpty(req.query.name)) {
+      where_clauses.push(`A.name = $${next_placeholder_id++}`);
+      objs.push(req.query.name);
+    }
+
+    if (checkNotEmpty(req.query.serviceType)) {
+      let x = Number.parseInt(req.query.serviceType);
+      if (x != -1) {
+        where_clauses.push(`S.serviceType = $${next_placeholder_id++}`);
+        objs.push(x);
+      }
+    }
+
+    if (checkNotEmpty(req.query.priceCompare) && checkNotEmpty(req.query.price)) {
+      let x = Number.parseInt(req.query.price);
+      let op = '=';
+      switch (req.query.priceCompare) {
+        case 'eq': op = '='; break;
+        case 'lt': op = '<'; break;
+        case 'gt': op = '>'; break;
+      }
+      where_clauses.push(`S.price ${op} $${next_placeholder_id++}`);
+      objs.push(x);
+    }
+
+    if (checkNotEmpty(req.query.region)) {
+      let x = Number.parseInt(req.query.region);
+      if (x != -1) {
+        where_clauses.push(`A.region = $${next_placeholder_id++}`);
+        objs.push(x);
+      }
+    }
+
+    if (where_clauses.length > 0) {
+      query_s += ' WHERE ';
+      query_s += where_clauses.join(' AND ');
+    }
+
+    if (checkNotEmpty(req.query.sort)) {
+      if (req.query.sort === 'lowPrice') {
+        query_s += ' ORDER BY S.price';
+      } else if (req.query.sort === 'highPrice') {
+        query_s += ' ORDER BY S.price DESC'
+      }
+    }
+
+    console.log(query_s);
+    console.log(objs);
+
+    const client = await db.connect();
+    try {
+      const results = (await client.query(query_s, objs)).rows;
+      const regions = await Cache.getRows(Cache.REGION);
+      const serviceTypes = await Cache.getRows(Cache.SERVICE_TYPE);
+
+      res.render('service', { results, regions, serviceTypes });
+    } finally {
+      client.release();
+    }
+  });
+
   app.get('/logout', (req, res) => {
     req.logout();
     res.redirect('/');
