@@ -2,6 +2,7 @@ const profile = require('./profile');
 const edit = require('./edit');
 const db = require('../db');
 
+
 // route middleware to make sure a user is logged in
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated())
@@ -9,13 +10,28 @@ function isLoggedIn(req, res, next) {
   res.redirect('/');
 }
 
+class Cache {
+  /**
+   * Helper to get SQL tables that do not change (e.g. Region, ServiceType).
+   */
+  static async getRows(name) {
+    if (this.cache.has(name)) return this.cache.get(name);
+    const rows = (await db.query('SELECT * FROM ' + name)).rows;
+    this.cache.set(name, rows);
+    return rows;
+  }
+};
+Cache.cache = new Map();
+Cache.REGION = 'Region';
+Cache.SERVICE_TYPE = 'ServiceType';
+
 module.exports = (app, passport) => {
   app.get('/', (req, res) => {
     res.render('index');
   });
 
   app.get('/signup', async (req, res) => {
-    const regions = (await db.query('SELECT * FROM Region')).rows;
+    const regions = await Cache.getRows(Cache.REGION);
     res.render('signup', { message: req.flash('signupMessage'), regions });
   });
 
@@ -36,6 +52,7 @@ module.exports = (app, passport) => {
   }));
 
   app.get('/profile', isLoggedIn, (req, res) => {
+    console.log(req.user);
     res.render('profile', { displayedUser: req.user });
   });
 
@@ -45,6 +62,18 @@ module.exports = (app, passport) => {
 
     app.get('/profile/edit', isLoggedIn, (req, res) => {
     res.render('edit', { message: req.flash('editProfileMessage') });
+  });
+
+  app.post('/edit/password', async (req, res) => {
+    const isSame = await edit.checkPassword(req.user.aid, req.body.oldPwd, req.user.hash);
+    if (isSame){
+      await edit.setPassword(req.user.aid, req.body.newPwd, req.user.hash);
+      res.redirect('/profile');
+    }
+    else {
+      console.log('Comparison fail!');
+      res.redirect('/profile/edit');
+    }
   });
 
   app.post('/edit/email', async (req, res) => {
@@ -123,8 +152,8 @@ module.exports = (app, passport) => {
     const client = await db.connect();
     try {
       const results = (await client.query(query_s, objs)).rows;
-      const regions = (await client.query('SELECT * FROM Region')).rows;
-      const serviceTypes = (await client.query('SELECT * FROM ServiceType')).rows;
+      const regions = await Cache.getRows(Cache.REGION);
+      const serviceTypes = await Cache.getRows(Cache.SERVICE_TYPE);
 
       res.render('service', { results, regions, serviceTypes });
     } finally {

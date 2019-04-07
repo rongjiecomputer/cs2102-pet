@@ -32,4 +32,5 @@ Every `.ejs` template will have access to these JS variables:
 
 - `authenticated: boolean`: whether the current visitor has logged in.
 - `user: Object`: user object of current authenticated visitor if `authenticated`
-  is true, otherwise `undefined`.
+  is true, otherwise `undefined`. `user.isPetOwner` is `true` if user is pet owner.
+  `user.isCareTaker` is `true` if user is care taker.

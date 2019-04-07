@@ -24,8 +24,17 @@ module.exports = passport => {
 
   // used to deserialize the user
   passport.deserializeUser(async (id, done) => {
-    const data = await db.query('SELECT * FROM Account WHERE aid = $1', [id]);
-    done(null, data.rows[0]);
+    try {
+      const client = await db.connect();
+      const user = (await client.query('SELECT * FROM Account WHERE aid = $1', [id])).rows[0];
+      user.isPetOwner = (await client.query('SELECT 1 FROM PetOwner WHERE aid = $1', [id])).rowCount > 0;
+      user.isCareTaker = (await client.query('SELECT 1 FROM CareTaker WHERE aid = $1', [id])).rowCount > 0;
+      done(null, user);
+    } catch (e) {
+      done(e);
+    } finally {
+      client.release();
+    }
   });
 
   // =========================================================================
@@ -53,7 +62,7 @@ module.exports = passport => {
         (name, username, email, hash, phone, address1, address2, region, postalCode)
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
         [req.body.name, req.body.username, email, hash, req.body.phone,
-          req.body.address1, req.body.address2, req.body.region, req.body.postalCode]);
+        req.body.address1, req.body.address2, req.body.region, req.body.postalCode]);
       const user = newData.rows[0];
 
       if (req.body.type == AccountType.PET_OWNER) {
