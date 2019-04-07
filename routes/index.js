@@ -57,6 +57,11 @@ module.exports = (app, passport) => {
     res.render('profile', { displayedUser: req.user });
   });
 
+  app.get('/records', isLoggedIn, (req, res) => {
+    console.log(req.user);
+    res.render('records', { displayedUser: req.user });
+  });
+
   app.get('/displayPets', isLoggedIn, (req, res) => {
       res.render('displayPets', { displayedUser: req.user });
   });

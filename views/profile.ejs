@@ -78,7 +78,7 @@
         <br>
 
         <a role = "button" class="btn btn-danger" href="/service">Search for a service</a>
-
+        <a role = "button" class="btn btn-danger" href="/records">See previous accepted services. </a>
         <% } else {%>
         <!-- if caretaker -->
         <a role = "button" class="btn disabled btn-danger">CareTaker</a>
@@ -132,12 +132,13 @@
         <br>
 
         <a role = "button" class="btn btn-danger" href='/requests'>Search for a job</a>
+        <a role = "button" class="btn btn-danger" href='/records'>See previous accepted jobs</a>
         <%}%>
         <br>
         <br>
         <div>
 
-          <p>Username: <%= displayedUser.username %></p>
+
           <p>Phone: <%= displayedUser.phone %></p>
           <p>Email: <%= displayedUser.email %></p>
 
