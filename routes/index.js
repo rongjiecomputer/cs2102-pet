@@ -97,7 +97,9 @@ module.exports = (app, passport) => {
   // Pets Page (Start)
   app.get('/profile/pets', isLoggedIn, async (req, res) => {
     const petsData = await pets.displayPets(req.user.aid);
-    res.render('pets', { displayedUser: req.user, pets: petsData});
+    const breedData = await pets.getBreeds();
+    const mcData = await pets.getMC();
+    res.render('pets', { displayedUser: req.user, pets: petsData, breeds: breedData, mc: mcData});
   });
 
   app.post('/pets/add', async (req, res) => {

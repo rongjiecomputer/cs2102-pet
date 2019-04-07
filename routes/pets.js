@@ -26,7 +26,25 @@ async function displayPets(id) {
   }
 }
 
+async function getBreeds() {
+  try {
+    return await db.query('SELECT name FROM Breed');
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+async function getMC() {
+  try {
+    return await db.query('SELECT name FROM MedicalCondition');
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 module.exports = {
   addPet,
-  displayPets
+  displayPets,
+  getBreeds,
+  getMC
 };
