@@ -5,12 +5,46 @@
   <% if (displayedUser === null) { %>
   <div class="alert alert-danger">Profile not found.</div>
   <% } else { %>
-  <section>
-    <p>Name: <%= displayedUser.name %></p>
-    <p>Username: <%= displayedUser.username %></p>
-    <p>Phone: <%= displayedUser.phone %></p>
-    <p>Email: <%= displayedUser.email %></p>
-  </section>
+    <div class="text-center">
+      <img src="images/placeholder.png" class="rounded-circle" style="width:250px;height:200px;" >
+        <br>
+        <p>Name: <%= displayedUser.name %></p>
+        <%if (true) {%>
+        <!-- if petOwner -->
+        <a role = "button" class="btn disabled btn-primary">PetOwner</a>
+        <br>
+        <br>
+        <a role = "button" class="btn btn-warning" onclick="location.href='/profile/edit';">Set up a Request!</a>
+        <a role = "button" class="btn btn-danger" onclick="location.href='/profile/edit';">Search for a service</a>
+        <% } else {%>
+        <!-- if caretaker -->
+        <a role = "button" class="btn disabled btn-danger">CareTaker</a>
+        <br>
+        <br>
+        <a role = "button" class="btn btn-warning" onclick="location.href='/profile/edit';">Set up a service!/a>
+        <a role = "button" class="btn btn-danger" onclick="location.href='/profile/edit';">Search for a job</a>
+        <%}%>
+        <br>
+        <br>
+        <div>
+
+          <p>Username: <%= displayedUser.username %></p>
+          <p>Phone: <%= displayedUser.phone %></p>
+          <p>Email: <%= displayedUser.email %></p>
+
+            <%if(true) {%>
+            <!-- if owner of profile -->
+            <a role = "button" class="btn btn-info" onclick="location.href='/profile/edit';">Edit your profile</a>
+            <%}%>
+            <%if(true) {%>
+            <!-- if petOwner -->
+            <a role = "button" class="btn btn-success" onclick="location.href='/displayPets';">show/add your pets!</a>
+            <%}%>
+
+        </div>
+    </div>
+
+
   <% } %>
 
 </main>

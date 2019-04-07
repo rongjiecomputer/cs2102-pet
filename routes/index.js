@@ -39,7 +39,11 @@ module.exports = (app, passport) => {
     res.render('profile', { displayedUser: req.user });
   });
 
-  app.get('/profile/edit', isLoggedIn, (req, res) => {
+  app.get('/displayPets', isLoggedIn, (req, res) => {
+      res.render('displayPets', { displayedUser: req.user });
+  });
+
+    app.get('/profile/edit', isLoggedIn, (req, res) => {
     res.render('edit', { message: req.flash('editProfileMessage') });
   });
 
