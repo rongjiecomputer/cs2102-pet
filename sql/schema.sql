@@ -71,7 +71,7 @@ CREATE TABLE PetMedicalCondition(
   PRIMARY KEY(aid,name,medicalCondition),
   FOREIGN KEY(aid,name) REFERENCES Pet,
   FOREIGN KEY(medicalCondition) REFERENCES MedicalCondition
-)
+);
 
 CREATE TABLE ServiceType(
   serviceType SERIAL,
