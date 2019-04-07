@@ -14,14 +14,61 @@
         <a role = "button" class="btn disabled btn-primary">PetOwner</a>
         <br>
         <br>
-        <a role = "button" class="btn btn-warning" onclick="location.href='/profile/edit';">Set up a Request!</a>
+
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#setUpRequest">
+            Set up a Request!
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="setUpRequest" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Set up a request!</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        insert the forms for setting up a request here: ie: what pet: what service. how long
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <a role = "button" class="btn btn-danger" onclick="location.href='/profile/edit';">Search for a service</a>
         <% } else {%>
         <!-- if caretaker -->
         <a role = "button" class="btn disabled btn-danger">CareTaker</a>
         <br>
         <br>
-        <a role = "button" class="btn btn-warning" onclick="location.href='/profile/edit';">Set up a service!/a>
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#setUpRequest">
+            Set up a service!
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="setUpRequest" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Set up a request!</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        insert the forms for setting up a service here: ie: what pet: what service. how long
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <a role = "button" class="btn btn-danger" onclick="location.href='/profile/edit';">Search for a job</a>
         <%}%>
         <br>
