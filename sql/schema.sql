@@ -80,6 +80,8 @@ CREATE TABLE Service(
   dateStart DATE NOT NULL, -- yyyy-mm-dd format
   dateEnd DATE NOT NULL,
 
+  acceptedBy INTEGER, --PetOwner id if accepted
+
   PRIMARY KEY(sid),
   FOREIGN KEY(aid) REFERENCES Account,
   FOREIGN KEY(serviceType) REFERENCES ServiceType,
@@ -105,6 +107,26 @@ CREATE TABLE ServiceRequest(
   FOREIGN KEY(aid, petName) REFERENCES Pet,
   FOREIGN KEY(serviceType) REFERENCES ServiceType,
   CHECK(dateStart <= dateEnd)
+);
+
+CREATE TABLE CareTakerRecords(
+  careTakerID INTEGER NOT NULL, -- CareTaker aid
+  petOwnerID INTEGER NOT NULL, -- PetOwner aid
+  srid INTEGER NOT NULL, -- Service Request ID
+  dateAccepted DATE DEFAULT CURRENT_DATE,
+  FOREIGN KEY(careTakerID) REFERENCES Account,
+  FOREIGN KEY(petOwnerID) REFERENCES Account,
+  FOREIGN KEY(srid) REFERENCES ServiceRequest
+);
+
+CREATE TABLE PetOwnerRecords(
+  petOwnerID INTEGER NOT NULL, -- PetOwner aid
+  careTakerID INTEGER NOT NULL, -- CareTaker aid
+  sid INTEGER NOT NULL, -- Service Request ID
+  dateAccepted DATE DEFAULT CURRENT_DATE,
+  FOREIGN KEY(careTakerID) REFERENCES Account,
+  FOREIGN KEY(petOwnerID) REFERENCES Account,
+  FOREIGN KEY(sid) REFERENCES Service
 );
 
 /**
@@ -287,6 +309,7 @@ INSERT INTO MedicalCondition (name) VALUES ('Gastric Bloat');
 INSERT INTO MedicalCondition (name) VALUES ('Heartworm');
 INSERT INTO MedicalCondition (name) VALUES ('Too Fat');
 INSERT INTO MedicalCondition (name) VALUES ('Too Thin');
+INSERT INTO MedicalCondition (name) VALUES ('None');
 
 INSERT INTO ServiceType (name) VALUES ('Pet Walking');
 INSERT INTO ServiceType (name) VALUES ('Pet Grooming');
