@@ -58,7 +58,14 @@ module.exports = (app, passport) => {
     res.render('profile', { displayedUser: req.user });
   });
 
+
+  app.get('/records', isLoggedIn, (req, res) => {
+    console.log(req.user);
+    res.render('records', { displayedUser: req.user });
+  });
+
   // Edit Page (Start)
+
     app.get('/profile/edit', isLoggedIn, (req, res) => {
     res.render('edit', { message: req.flash('editProfileMessage') });
   });
