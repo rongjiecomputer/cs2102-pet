@@ -166,6 +166,24 @@ module.exports = (app, passport) => {
     }
   });
 
+  app.get('/advertisedrequestservice', isLoggedIn, async (req, res) => {
+    function checkNotEmpty(x) {
+      return typeof x === 'string' && x !== '';
+    }
+
+    let query_ad = "SELECT S.*, A.name FROM Service S JOIN Account A ON S.aid = A.aid";
+
+    console.log(query_ad);
+
+    const client = await db.connect();
+    try {
+      const results = (await client.query(query_ad)).rows;
+      res.render('advertisedrequestservice', { results });
+    } finally {
+      client.release();
+    }
+  });
+
   app.get('/logout', (req, res) => {
     req.logout();
     res.redirect('/');
