@@ -69,12 +69,26 @@
       <div class="">No result found.</div>
       <% } else { %>
       <div class="table-responsive">
-        <% for (const row of results) { %>
-        <div class="card">
-          <div class="card-header">Header</div>
-          <div class="card-body">Content</div>
-        </div>
-        <% } %>
+        <table class="table-striped">
+          <thead>
+            <th>Name</th>
+            <th>Service Type</th>
+            <th>Price (SGD)</th>
+            <th>Start date</th>
+            <th>End date</th>
+          </thead>
+          <tbody>
+            <% for (const row of results) { %>
+            <tr>
+              <td><%= row.name %></td>
+              <td><%= row.serviceType %></td>
+              <td><%= row.price %></td>
+              <td><%= row.dateStart %></td>
+              <td><%= row.dateEnd %></td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
       </div>
       <% } %>
 
