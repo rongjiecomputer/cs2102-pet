@@ -2,168 +2,168 @@
 
 <main class="container">
 
-    <% if (displayedUser === null) { %>
-        <div class="alert alert-danger">Profile not found.</div>
-    <% } else { %>
-    <div class="text-center">
+  <% if (displayedUser === null) { %>
+  <div class="alert alert-danger">Profile not found.</div>
+  <% } else { %>
+  <div class="profile-container">
+    <figure class="figure mx-auto my-3">
+      <% if (displayedUser.isPetOwner) { %>
+      <!--if petowner-->
+      <img src="images/petowner.png" class="figure-img rounded-circle" style=" object-fit: cover;
+        height: 300px;width: 300px;">
+      <% } else { %>
+      <!--if caretaker-->
+      <img src="images/caretaker.png" class="figure-img rounded-circle" style=" object-fit: cover;
+        height: 300px;width: 300px;">
+      <% } %>
+    </figure>
+
+    <p>
+      Name: <%= displayedUser.name %>
+      <span class="badge badge-primary">
         <% if (displayedUser.isPetOwner) { %>
-            <!--if petowner-->
-            <img src="images/petowner.png" class="rounded-circle" style=" object-fit: cover;
-        border-radius: 50%;height: 300px;width: 300px;">
+        Pet Owner
         <% } else { %>
-            <!--if caretaker-->
-            <img src="images/caretaker.png" class="rounded-circle" style=" object-fit: cover;
-        border-radius: 50%;height: 300px;width: 300px;">
+        Care Taker
         <% } %>
-        <br>
-        <p>Name: <%= displayedUser.name %></p>
-        <% if (displayedUser.isPetOwner) { %>
-            <!-- if petOwner -->
-            <a role="button" class="btn disabled btn-primary">PetOwner</a>
-            <br>
-            <br>
+      </span>
+    </p>
+    <p>Phone: <%= displayedUser.phone %></p>
+    <p>Email: <%= displayedUser.email %></p>
 
+    <% if (user.aid == displayedUser.aid) { %>
+    <% if (displayedUser.isPetOwner) { %>
+    <!-- Button trigger modal -->
+    <p>
+      <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#setUpRequest">
+        Create a request
+      </button>
+      <a role="button" class="btn btn-warning" href="/advertisedrequestservice">View submitted requests</a>
+    </p>
 
-            <!-- Button trigger modal -->
-            <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#setUpRequest">
-                Set up a Request!
+    <!-- Modal -->
+    <div class="modal fade" id="setUpRequest" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Set up a request!</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
             </button>
-
-            <!-- Modal -->
-            <div class="modal fade" id="setUpRequest" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-                 aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Set up a request!</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <form method="post">
-                                <select class="custom-select">
-                                    <option selected="true" disabled="disabled">Select your pet</option>
-                                    <option value="1">dog1</option>
-                                    <option value="2">dog2</option>
-                                    <option value="3">dog3</option>
-                                </select>
-                                <br>
-                                <br>
-                                <select class="custom-select">
-                                    <option selected="true" disabled="disabled">Select a service type</option>
-                                    <option value="1">dog1</option>
-                                    <option value="2">dog2</option>
-                                    <option value="3">dog3</option>
-                                </select>
-                                <br>
-                                <br>
-                                <input type="number" class="form-control" id="MaxPrice" min="0"
-                                       placeholder="Max Price in dollars">
-                                <br>
-                                <label>Start Date</label>
-                                <input class="form-control" placeholder="Start Date" type="date" name="StartDate">
-                                <br>
-                                <label>End Date</label>
-                                <input class="form-control" placeholder="End Date" type="date" name="StartDate">
-
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary">Advertise Request!</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <a role="button" class="btn btn-warning" onclick="location.href='/advertisedrequestservice';">See your advertised
-                requests</a>
-            <br>
-            <br>
-            <a role = "button" class="btn btn-danger" href="/service">Search for a service</a>
-            <a role = "button" class="btn btn-danger" href="/petownerRecords">See previous accepted services. </a>
-
-        <% } else { %>
-            <!-- if caretaker -->
-            <a role="button" class="btn disabled btn-danger">CareTaker</a>
-            <br>
-            <br>
-
-            <!-- Button trigger modal -->
-            <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#setUpRequest">
-                Set up a service!
-            </button>
-
-            <!-- Modal -->
-            <div class="modal fade" id="setUpRequest" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-                 aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Set up a request!</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <form method="post">
-
-                                <select class="custom-select">
-                                    <option selected="true" disabled="disabled">Select a service type</option>
-                                    <option value="1">dog1</option>
-                                    <option value="2">dog2</option>
-                                    <option value="3">dog3</option>
-                                </select>
-                                <br>
-                                <br>
-                                <input type="number" class="form-control" id="MaxPrice" min="0"
-                                       placeholder="Max Price in dollars">
-                                <br>
-                                <label>Start Date</label>
-                                <input class="form-control" placeholder="Start Date" type="date" name="StartDate">
-                                <br>
-                                <label>End Date</label>
-                                <input class="form-control" placeholder="End Date" type="date" name="StartDate">
-
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary">Advertise Service!</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <a role="button" class="btn btn-warning" onclick="location.href='/advertisedrequestservice';">See your advertised
-                services</a>
-            <br>
-            <br>
-
-            <a role="button" class="btn btn-danger" href='/requests'>Search for a job</a>
-            <a role = "button" class="btn btn-danger" href='/caretakerRecords'>See previous accepted jobs</a>
-        <% } %>
-
-        <br>
-        <br>
-        <div>
-
-          <p>Phone: <%= displayedUser.phone %></p>
-          <p>Email: <%= displayedUser.email %></p>
-
-
-            <% if(user.aid == displayedUser.aid) { %>
-                <!-- if owner of profile -->
-                <a role="button" class="btn btn-info" onclick="location.href='/profile/edit';">Edit your profile</a>
-            <% } %>
-            <% if(displayedUser.isPetOwner) { %>
-                <!-- if petOwner -->
-                <a role="button" class="btn btn-success" onclick="location.href='/profile/pets';">show/add your pets!</a>
-            <% } %>
-
+          </div>
+          <div class="modal-body">
+            <form method="post">
+              <div class="form-group">
+                <label>Pet</label>
+                <select class="form-control">
+                  <% for (const pet of pets) { %>
+                  <option value="<%= pet.name %>"><%= pet.name %></option>
+                  <% } %>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Service type</label>
+                <select class="form-control" name="serviceType">
+                  <% for (const row of serviceTypes) { %>
+                  <option value="<%= row.servicetype %>"><%= row.name %></option>
+                  <% } %>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Start Date</label>
+                <input class="form-control" type="date" name="dateStart">
+              </div>
+              <div class="form-group">
+                <label>End Date</label>
+                <input class="form-control" type="date" name="dateEnd">
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary">Submit request</button>
+          </div>
         </div>
+      </div>
     </div>
 
+    <p>
+      <a role="button" class="btn btn-success" href="/profile/pets">Manage pets</a>
+    </p>
+    <p>
+      <a role="button" class="btn btn-danger" href="/service">Search services</a>
+      <a role="button" class="btn btn-danger" href="/petownerRecords">See previous accepted services</a>
+    </p>
+
+    <% } else { %>
+    <!-- if caretaker -->
+
+    <p>
+      <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#setUpRequest">
+        Create a service
+      </button>
+      <a role="button" class="btn btn-warning" href="/advertisedrequestservice">
+        View submitted services</a>
+    </p>
+
+    <!-- Modal -->
+    <div class="modal fade" id="setUpRequest" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Create service</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="form-group">
+                <label>Service type</label>
+                <select class="form-control" name="serviceType">
+                  <% for (const row of serviceTypes) { %>
+                  <option value="<%= row.servicetype %>"><%= row.name %></option>
+                  <% } %>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Maxmimum price you are willing pay (SGD)</label>
+                <input type="number" class="form-control" name="maxPrice" min="0">
+              </div>
+              <div class="form-group">
+                <label>Start Date</label>
+                <input class="form-control" type="date" name="dateStart">
+              </div>
+              <div class="form-group">
+                <label>End Date</label>
+                <input class="form-control" type="date" name="dateEnd">
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary">Advertise Service!</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p>
+      <a role="button" class="btn btn-danger" href="/requests">Search for a job</a>
+      <a role="button" class="btn btn-danger" href='/caretakerRecords'>See previous accepted jobs</a>
+    </p>
+    <!-- end of care taker-->
     <% } %>
+    <p>
+      <a role="button" class="btn btn-info" href="/profile/edit">Edit your profile</a>
+    </p>
+
+    <!-- end of authenticated user -->
+    <% } %>
+
+  </div>
+
+  <% } %>
 
 </main>
 
