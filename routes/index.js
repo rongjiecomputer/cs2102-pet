@@ -1,5 +1,6 @@
 const profile = require('./profile');
 const edit = require('./edit');
+const displayPets = require('./displayPets');
 const db = require('../db');
 
 
@@ -83,6 +84,13 @@ module.exports = (app, passport) => {
 
   app.post('/edit/phone', async (req, res) => {
     await edit.setPhone(req.user.aid, req.body.newPhone);
+    //res.status(200).send({ success: true , message: 'Phone edit success'});
+    res.redirect('/profile');
+  });
+
+  app.post('/displayPets/add', async (req, res) => {
+    await displayPets.addPet(req.user.aid, req.body.petName, req.body.petWeight,req.body.petBday, req.body.petBreed,
+        req.body.petMC, req.body.petRemarks);
     res.redirect('/profile');
   });
 
