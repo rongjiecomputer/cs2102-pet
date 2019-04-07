@@ -4,7 +4,7 @@
  * "SERIAL" is a PostgreSQL pseudo-type that generates sequence of integer.
  */
 
-DROP TABLE IF EXISTS Transaction, Service, ServiceType, Availability, Pet,
+DROP TABLE IF EXISTS ServiceRequest, Service, ServiceType, Availability, Pet,
   MedicalCondition, Breed, PetOwner, CareTaker, Account, Region CASCADE;
 
 CREATE TABLE Region(
@@ -93,14 +93,25 @@ CREATE TABLE Service(
   FOREIGN KEY(serviceType) REFERENCES ServiceType
 );
 
-CREATE TABLE Transaction(
-  tid SERIAL,
-  sid INTEGER NOT NULL,
+CREATE TABLE ServiceRequest(
+  srid SERIAL,
+
   aid INTEGER NOT NULL, -- PetOwner
-  transactionTime TIMESTAMP NOT NULL,
-  PRIMARY KEY(tid),
-  FOREIGN KEY(sid) REFERENCES Service,
-  FOREIGN KEY(aid) REFERENCES Account
+  petName VARCHAR(50) NOT NULL,
+
+  serviceType INTEGER NOT NULL,
+  maxPrice INTEGER NOT NULL, -- maximum price that the pet owner is willing to pay
+  dateStart DATE NOT NULL,
+  dateEnd DATE NOT NULL,
+
+  acceptedBy INTEGER, -- CareTaker id if accepted
+
+  PRIMARY KEY(srid),
+  FOREIGN KEY(aid) REFERENCES Account,
+  FOREIGN KEY(acceptedBy) REFERENCES Account,
+  FOREIGN KEY(aid, petName) REFERENCES Pet,
+  FOREIGN KEY(serviceType) REFERENCES ServiceType,
+  CHECK(dateStart <= dateEnd)
 );
 
 /**
@@ -211,7 +222,7 @@ LANGUAGE plpgsql;
 
 CREATE TRIGGER is_petowner1
 BEFORE INSERT OR UPDATE
-ON Transaction
+ON ServiceRequest
 FOR EACH ROW
 EXECUTE PROCEDURE is_petowner();
 
@@ -229,7 +240,7 @@ BEGIN
   WHERE (A.dateStart <= NEW.dateStart AND NEW.dateStart <= A.dateEnd) 
      OR (A.dateStart <= NEW.dateEnd AND NEW.dateEnd <= A.dateEnd);
   IF count > 0 THEN
-    RETURN NULL
+    RETURN NULL;
   ELSE
     RETURN NEW;
   END IF;
