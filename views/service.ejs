@@ -19,7 +19,7 @@
             <select class="form-control" name="serviceType">
               <option value="-1">Any</option>
               <% for (const row of serviceTypes) { %>
-              <option value="<%= row.serviceType %>"><%= row.name %></option>
+              <option value="<%= row.servicetype %>"><%= row.name %></option>
               <% } %>
             </select>
           </div>
@@ -30,7 +30,7 @@
               <select class="form-control" name="priceCompare">
                 <option value="eq">Equal</option>
                 <option value="lt">Less than</option>
-                <option value="lt">Greater than</option>
+                <option value="gt">Greater than</option>
               </select>
               <input type="number" class="form-control" min="0" name="price">
             </div>
@@ -69,12 +69,26 @@
       <div class="">No result found.</div>
       <% } else { %>
       <div class="table-responsive">
-        <% for (const row of results) { %>
-        <div class="card">
-          <div class="card-header">Header</div>
-          <div class="card-body">Content</div>
-        </div>
-        <% } %>
+        <table class="table-striped">
+          <thead>
+            <th>Name</th>
+            <th>Service Type</th>
+            <th>Price (SGD)</th>
+            <th>Start date</th>
+            <th>End date</th>
+          </thead>
+          <tbody>
+            <% for (const row of results) { %>
+            <tr>
+              <td><%= row.name %></td>
+              <td><%= serviceTypes[row.servicetype - 1].name %></td>
+              <td><%= row.price %></td>
+              <td><%= row.datestart.toLocaleDateString() %></td>
+              <td><%= row.dateend.toLocaleDateString() %></td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
       </div>
       <% } %>
 
