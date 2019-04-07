@@ -53,7 +53,6 @@ module.exports = (app, passport) => {
   }));
 
   app.get('/profile', isLoggedIn, (req, res) => {
-    console.log(req.user);
     res.render('profile', { displayedUser: req.user });
   });
 
