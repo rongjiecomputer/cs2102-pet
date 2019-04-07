@@ -73,7 +73,8 @@ CREATE TABLE Availability(
   aid INTEGER NOT NULL, -- CareTaker
   dateStart DATE NOT NULL, -- yyyy-mm-dd format
   dateEnd DATE NOT NULL,
-  FOREIGN KEY(aid) REFERENCES Account
+  FOREIGN KEY(aid) REFERENCES Account,
+  CHECK(dateStart <= dateEnd)
 );
 
 CREATE TABLE ServiceType(
@@ -215,20 +216,76 @@ FOR EACH ROW
 EXECUTE PROCEDURE is_petowner();
 
 /**
- * Constraint 4: No overlapping [dateStart, dateEnd].
+ * Constraint 4: No overlapping availability [dateStart, dateEnd].
+ * Pre-cond: there are no overlaps before this insert/update operation.
  */
+CREATE OR REPLACE FUNCTION no_overlapping()
+RETURNS TRIGGER AS
+$$
+DECLARE count NUMERIC;
+BEGIN
+  SELECT COUNT (*) INTO count
+  FROM Availability A
+  WHERE (A.dateStart <= NEW.dateStart AND NEW.dateStart <= A.dateEnd) 
+     OR (A.dateStart <= NEW.dateEnd AND NEW.dateEnd <= A.dateEnd);
+  IF count > 0 THEN
+    RETURN NULL
+  ELSE
+    RETURN NEW;
+  END IF;
+END;
+$$
+LANGUAGE plpgsql;
 
+CREATE TRIGGER detect_overlapping
+BEFORE INSERT OR UPDATE
+ON Availability
+FOR EACH ROW
+EXECUTE PROCEDURE no_overlapping();
 
 /**
  * Pre-populated values.
  */
 
-INSERT INTO Region (name) VALUES ('Central Region','East Region','North Region','North-East Region','West Region');
-INSERT INTO Breed (name) VALUES ('Bulldog','Poodle','Labrador Retriever','Mastiff','Beagle','Greyhound','Pug'
-'Siberian Husky','Dachshund','ChuHuaHua','Dog thats a cat','Cat thats a dog','Russian Blue','Persian Cat','Scottish Fold'
-'British ShortHair','Siamese Cat','Maine Coon','Munchkin Cat','Ragdoll','Sphynx cat','Abyssinian Cat','Turkish Angora'
-'Norwegian Forest Cat','Bengal Cat','Birman','a Bird');
+
+
+INSERT INTO Region (name) VALUES ('Central Region');
+INSERT INTO Region (name) VALUES ('East Region');
+INSERT INTO Region (name) VALUES ('North Region');
+INSERT INTO Region (name) VALUES ('North-East Region');
+INSERT INTO Region (name) VALUES ('West Region');
+
+INSERT INTO Breed (name) VALUES ('Bulldog');
+INSERT INTO Breed (name) VALUES ('Poodle');
+INSERT INTO Breed (name) VALUES ('Labrador Retriever');
+INSERT INTO Breed (name) VALUES ('Mastiff');
+INSERT INTO Breed (name) VALUES ('Beagle');
+INSERT INTO Breed (name) VALUES ('Greyhound');
+INSERT INTO Breed (name) VALUES ('Pug');
+INSERT INTO Breed (name) VALUES ('Siberian Husky');
+INSERT INTO Breed (name) VALUES ('Dachshund');
+INSERT INTO Breed (name) VALUES ('ChuHuaHua');
+INSERT INTO Breed (name) VALUES ('Dog thats a cat');
+INSERT INTO Breed (name) VALUES ('Cat thats a dog');
+INSERT INTO Breed (name) VALUES ('Russian Blue');
+INSERT INTO Breed (name) VALUES ('Persian Cat');
+INSERT INTO Breed (name) VALUES ('Scottish Fold';
+INSERT INTO Breed (name) VALUES ('British Shorthair');
+INSERT INTO Breed (name) VALUES ('Siamese Cat');
+INSERT INTO Breed (name) VALUES ('Maine Coon');
+INSERT INTO Breed (name) VALUES ('Munchkin Cat');
+INSERT INTO Breed (name) VALUES ('Ragdoll');
+INSERT INTO Breed (name) VALUES ('Sphyx Cat');
+INSERT INTO Breed (name) VALUES ('Abyssinian Cat');
+INSERT INTO Breed (name) VALUES 'Turkish Angora'
+INSERT INTO Breed (name) VALUES 'Norwegian Forest Cat',
+INSERT INTO Breed (name) VALUES 'Bengal Cat',
+INSERT INTO Breed (name) VALUES 'Birman'
+INSERT INTO Breed (name) VALUES ,'a Bird')
+
+
 INSERT INTO MedicalCondition (name) VALUES ('Arthritis','Cancer','Dental Disease','Distemper','Epilepsy','Gastric Bloat'
 'Heartworm','Too Fat','Too Thin');
+
 INSERT INTO ServiceType (name) VALUES ('Pet Walking','Pet Grooming','Pet health checkup','Pet Petting','Taking a pet on
 a nice date to reminisce your friendship');

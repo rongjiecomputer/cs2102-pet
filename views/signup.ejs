@@ -56,7 +56,9 @@
       <div class="form-group">
         <label>Region</label>
         <select class="form-control" name="region" required>
-          <option value="1">Kent Ridge</option>
+          <% for (const row of regions) { %>
+          <option value="<%= row.aid %>"><%= row.name %></option>
+          <% } %>
         </select>
       </div>
 
