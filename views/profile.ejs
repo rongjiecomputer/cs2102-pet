@@ -6,7 +6,15 @@
   <div class="alert alert-danger">Profile not found.</div>
   <% } else { %>
     <div class="text-center">
-      <img src="images/placeholder.png" class="rounded-circle" style="width:250px;height:200px;" >
+        <%if (true) {%>
+        <!--if petowner-->
+        <img src="images/petowner.png" class="rounded-circle" style=" object-fit: cover;
+        border-radius: 50%;height: 300px;width: 300px;" >
+        <% } else { %>
+        <!--if caretaker-->
+        <img src="images/caretaker.png" class="rounded-circle" style=" object-fit: cover;
+        border-radius: 50%;height: 300px;width: 300px;" >
+        <% } %>
         <br>
         <p>Name: <%= displayedUser.name %></p>
         <%if (true) {%>
