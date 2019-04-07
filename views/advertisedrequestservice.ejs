@@ -1,6 +1,6 @@
 <%- include('header', {title: 'AdvertisedRequestService'}); -%>
 
-<main class="col-md-8 px-4">
+<main class="container">
   <h2>Your advertised requests/services</h2>
   <% if (results.length == 0) { %>
     <div class="">No result found.</div>
@@ -28,7 +28,5 @@
       </table>
     </div>
   <% } %>
-
 </main>
-
 <%- include('footer'); -%>
