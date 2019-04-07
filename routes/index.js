@@ -208,7 +208,7 @@ module.exports = (app, passport) => {
       return typeof x === 'string' && x !== '';
     }
 
-    let query_ad = "SELECT S.*, A.name FROM Service S JOIN Account A ON S.aid = A.aid";
+    let query_ad = `SELECT S.*, A.name FROM Service S JOIN Account A ON S.aid = A.aid WHERE ${req.user.aid} = A.aid`;
 
     console.log(query_ad);
 
