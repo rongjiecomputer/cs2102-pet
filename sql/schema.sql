@@ -277,15 +277,27 @@ INSERT INTO Breed (name) VALUES ('Munchkin Cat');
 INSERT INTO Breed (name) VALUES ('Ragdoll');
 INSERT INTO Breed (name) VALUES ('Sphyx Cat');
 INSERT INTO Breed (name) VALUES ('Abyssinian Cat');
-INSERT INTO Breed (name) VALUES 'Turkish Angora'
-INSERT INTO Breed (name) VALUES 'Norwegian Forest Cat',
-INSERT INTO Breed (name) VALUES 'Bengal Cat',
-INSERT INTO Breed (name) VALUES 'Birman'
-INSERT INTO Breed (name) VALUES ,'a Bird')
+INSERT INTO Breed (name) VALUES ('Turkish Angora');
+INSERT INTO Breed (name) VALUES ('Norwegian Forest Cat');
+INSERT INTO Breed (name) VALUES ('Bengal Cat');
+INSERT INTO Breed (name) VALUES ('Birman');
+INSERT INTO Breed (name) VALUES ('a Bird');
 
 
-INSERT INTO MedicalCondition (name) VALUES ('Arthritis','Cancer','Dental Disease','Distemper','Epilepsy','Gastric Bloat'
-'Heartworm','Too Fat','Too Thin');
+INSERT INTO MedicalCondition (name) VALUES ('Arthritis');
+INSERT INTO MedicalCondition (name) VALUES ('Cancer');
+INSERT INTO MedicalCondition (name) VALUES ('Dental Disease');
+INSERT INTO MedicalCondition (name) VALUES ('Distemper');
+INSERT INTO MedicalCondition (name) VALUES ('Epilepsy');
+INSERT INTO MedicalCondition (name) VALUES ('Gastric Bloat');
+INSERT INTO MedicalCondition (name) VALUES ('Heartworm');
+INSERT INTO MedicalCondition (name) VALUES ('Too Fat');
+INSERT INTO MedicalCondition (name) VALUES ('Too Thin');
 
-INSERT INTO ServiceType (name) VALUES ('Pet Walking','Pet Grooming','Pet health checkup','Pet Petting','Taking a pet on
-a nice date to reminisce your friendship');
+INSERT INTO ServiceType (name) VALUES ('Pet Walking');
+INSERT INTO ServiceType (name) VALUES ('Pet Grooming');
+INSERT INTO ServiceType (name) VALUES ('Pet health checkup');
+INSERT INTO ServiceType (name) VALUES ('Pet Petting');
+INSERT INTO ServiceType (name) VALUES ('Pet Sitting');
+INSERT INTO ServiceType (name) VALUES ('Pet Dance lessons');
+INSERT INTO ServiceType (name) VALUES ('Pet Training');
