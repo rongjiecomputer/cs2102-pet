@@ -12,16 +12,19 @@ async function addPet(id, name, weight, bday, breed, mc, remarks) {
 
 async function displayPets(id) {
   try {
-    const data = await db.query('SELECT * FROM Pet WHERE aid = $1', [id]);
+    const data = await db.query('SELECT p.name, weight, birthday, b.name as breed, mc.name as medicalcondition, remark\n' +
+        'FROM Pet p\n' +
+        'INNER JOIN Breed b\n' +
+        'ON p.breed = b.breed\n' +
+        'INNER JOIN medicalcondition mc\n' +
+        'ON p.medicalcondition = mc.medicalcondition\n' +
+        'WHERE aid = $1', [id]);
     console.log('Pets select success!');
-    console.log('~~~~~~~~~~~~~~~~Display Data~~~~~~~~~~~~~~~~~~~~');
-    console.log(data.rows[0]);
     return data;
   } catch (err) {
     console.log(err);
   }
 }
-
 
 module.exports = {
   addPet,

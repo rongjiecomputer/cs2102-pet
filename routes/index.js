@@ -96,14 +96,14 @@ module.exports = (app, passport) => {
 
   // Pets Page (Start)
   app.get('/profile/pets', isLoggedIn, async (req, res) => {
-    const data = await pets.displayPets(req.user.aid);
-    res.render('pets', { displayedUser: req.user, pets: data});
+    const petsData = await pets.displayPets(req.user.aid);
+    res.render('pets', { displayedUser: req.user, pets: petsData});
   });
 
   app.post('/pets/add', async (req, res) => {
     await pets.addPet(req.user.aid, req.body.petName, req.body.petWeight,req.body.petBday, req.body.petBreed,
         req.body.petMC, req.body.petRemarks);
-    res.redirect('/profile');
+    res.redirect('/profile/pets');
   });
   // Pets Page (End)
 
