@@ -269,7 +269,7 @@ INSERT INTO Breed (name) VALUES ('Dog thats a cat');
 INSERT INTO Breed (name) VALUES ('Cat thats a dog');
 INSERT INTO Breed (name) VALUES ('Russian Blue');
 INSERT INTO Breed (name) VALUES ('Persian Cat');
-INSERT INTO Breed (name) VALUES ('Scottish Fold';
+INSERT INTO Breed (name) VALUES ('Scottish Fold');
 INSERT INTO Breed (name) VALUES ('British Shorthair');
 INSERT INTO Breed (name) VALUES ('Siamese Cat');
 INSERT INTO Breed (name) VALUES ('Maine Coon');
