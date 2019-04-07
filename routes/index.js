@@ -1,6 +1,6 @@
 const profile = require('./profile');
 const edit = require('./edit');
-const displayPets = require('./displayPets');
+const pets = require('./pets');
 const db = require('../db');
 
 
@@ -53,14 +53,10 @@ module.exports = (app, passport) => {
   }));
 
   app.get('/profile', isLoggedIn, (req, res) => {
-    console.log(req.user);
     res.render('profile', { displayedUser: req.user });
   });
 
-  app.get('/displayPets', isLoggedIn, (req, res) => {
-      res.render('displayPets', { displayedUser: req.user });
-  });
-
+  // Edit Page (Start)
     app.get('/profile/edit', isLoggedIn, (req, res) => {
     res.render('edit', { message: req.flash('editProfileMessage') });
   });
@@ -87,12 +83,20 @@ module.exports = (app, passport) => {
     //res.status(200).send({ success: true , message: 'Phone edit success'});
     res.redirect('/profile');
   });
+  // Edit Page (End)
 
-  app.post('/displayPets/add', async (req, res) => {
-    await displayPets.addPet(req.user.aid, req.body.petName, req.body.petWeight,req.body.petBday, req.body.petBreed,
+  // Pets Page (Start)
+  app.get('/profile/pets', isLoggedIn, async (req, res) => {
+    const data = await pets.displayPets(req.user.aid);
+    res.render('pets', { displayedUser: req.user, pets: data});
+  });
+
+  app.post('/pets/add', async (req, res) => {
+    await pets.addPet(req.user.aid, req.body.petName, req.body.petWeight,req.body.petBday, req.body.petBreed,
         req.body.petMC, req.body.petRemarks);
     res.redirect('/profile');
   });
+  // Pets Page (End)
 
   app.get('/profile/:aid(\\d+)', isLoggedIn, async (req, res) => {
     res.render('profile', await profile.getTplObjectForProfile(req.params.aid));
@@ -171,7 +175,7 @@ module.exports = (app, passport) => {
       return typeof x === 'string' && x !== '';
     }
 
-    let query_ad = "SELECT S.*, A.name FROM Service S JOIN Account A ON S.aid = A.aid";
+    let query_ad = `SELECT S.*, A.name FROM Service S JOIN Account A ON S.aid = A.aid WHERE ${req.user.aid} = A.aid`;
 
     console.log(query_ad);
 

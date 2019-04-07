@@ -1,0 +1,96 @@
+<%- include('header', {title: 'Pets'}); -%>
+
+<main class="container">
+
+    <% if (displayedUser === null) { %>
+        <div class="alert alert-danger">Profile not found.</div>
+    <% } else { %>
+        <!-- Add Pet Modal (Start)-->
+        <!-- Modal Button -->
+        <button type="button" id="addPetBtn" class="btn btn-primary" data-toggle="modal" data-target="#addPetModal">
+            Add Pet
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="addPetModal" tabindex="-1" role="dialog" aria-labelledby="addPetModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addPetModalLabel">Add Pet</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="/pets/add" method="POST">
+                        <div class="modal-body">
+                            <label class="font-weight-bold"><b>Name</b></label>
+                            <input class="form-control" type="text" placeholder="Enter Name" name="petName" required>
+
+                            <label class="font-weight-bold"><b>Weight</b></label>
+                            <input class="form-control" type="number" placeholder="Enter Weight" name="petWeight"
+                                   required>
+
+                            <label class="font-weight-bold"><b>Birthday</b></label>
+                            <input class="form-control" type="date" placeholder="Enter Birthday" name="petBday"
+                                   required>
+
+                            <label class="font-weight-bold"><b>Breed</b></label>
+                            <input class="form-control" type="number" placeholder="Enter Breed" name="petBreed"
+                                   required>
+
+                            <label class="font-weight-bold"><b>Medical Condition</b></label>
+                            <input class="form-control" type="number" placeholder="Enter Medical Condition" name="petMC"
+                                   required>
+
+                            <label class="font-weight-bold"><b>Remarks</b></label>
+                            <input class="form-control" type="text" placeholder="Enter Remarks (Optional)"
+                                   name="petRemarks">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-success">Submit</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- Add Pet Modal (End)-->
+            <br>
+            <br>
+        <!-- Display Pet (Start)-->
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Weight</th>
+                    <th>Birthday</th>
+                    <th>Breed</th>
+                    <th>Medical Condition</th>
+                    <th>Remark</th>
+                </tr>
+                </thead>
+                <tbody>
+            <%
+                let index = 0;
+                while(pets.rows[index]){
+            %>
+                <tr>
+                    <th scope="row"><%= index+1 %></th>
+                    <td><%= pets.rows[index].name %></td>
+                    <td><%= pets.rows[index].weight %></td>
+                    <td><%= pets.rows[index].birthday %></td>
+                    <td><%= pets.rows[index].breed %></td>
+                    <td><%= pets.rows[index].medicalcondition %></td>
+                    <td><%= pets.rows[index].remark %></td>
+                </tr>
+            <%
+                index++;
+            } %>
+                </tbody>
+            </table>
+        <!-- Display Pet (End)-->
+    <% } %>
+</main>
+<%- include('footer'); -%>
