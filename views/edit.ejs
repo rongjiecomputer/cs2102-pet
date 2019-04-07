@@ -22,25 +22,25 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    <form action="/edit" method="POST">
+                <form action="/edit/password" method="POST">
+                    <div class="modal-body">
                         <label class="font-weight-bold"><b>Old Password</b></label>
                         <input class="form-control" type="password" placeholder="Enter Old Password" name="oldPwd"
                                autocomplete="current-password" required>
 
                         <label class="font-weight-bold"><b>New Password</b></label>
-                        <input class="form-control" type="password" placeholder="Enter New Password" name="newPwd"
+                        <input class="form-control" type="password" placeholder="Enter New Password" id="newPwd" name="newPwd"
                                autocomplete="new-password" required>
 
                         <label class="font-weight-bold"><b>Confirm New Password</b></label>
                         <input class="form-control" type="password" placeholder="Confirm New Password" name="cfmNewPwd"
-                               autocomplete="new-password" required>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-success">Submit</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                </div>
+                               autocomplete="new-password" oninput="checkMatchingPassword(this)" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Submit</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -99,7 +99,7 @@
                         <input class="form-control" type="tel" placeholder="Enter New Phone" name="newPhone" required>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-success" value="email">Submit</button>
+                        <button type="submit" class="btn btn-success" value="email">Submit</button>
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                     </div>
                 </form>
@@ -108,5 +108,15 @@
     </div>
 
 </main>
+
+<script language='javascript' type='text/javascript'>
+    function checkMatchingPassword(input) {
+        if (input.value != document.getElementById('newPwd').value) {
+            input.setCustomValidity('Password must be matching.');
+        } else {
+            input.setCustomValidity('');
+        }
+    }
+</script>
 
 <%- include('footer'); -%>
