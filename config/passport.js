@@ -32,6 +32,8 @@ module.exports = passport => {
       done(null, user);
     } catch (e) {
       done(e);
+    } finally {
+      client.release();
     }
   });
 
