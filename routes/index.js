@@ -2,6 +2,7 @@ const profile = require('./profile');
 const edit = require('./edit');
 const db = require('../db');
 
+
 // route middleware to make sure a user is logged in
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated())
@@ -45,6 +46,18 @@ module.exports = (app, passport) => {
 
     app.get('/profile/edit', isLoggedIn, (req, res) => {
     res.render('edit', { message: req.flash('editProfileMessage') });
+  });
+
+  app.post('/edit/password', async (req, res) => {
+    const isSame = await edit.checkPassword(req.user.aid, req.body.oldPwd, req.user.hash);
+    if (isSame){
+      await edit.setPassword(req.user.aid, req.body.newPwd, req.user.hash);
+      res.redirect('/profile');
+    }
+    else {
+      console.log('Comparison fail!');
+      res.redirect('/profile/edit');
+    }
   });
 
   app.post('/edit/email', async (req, res) => {
