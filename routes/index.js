@@ -9,13 +9,28 @@ function isLoggedIn(req, res, next) {
   res.redirect('/');
 }
 
+class Cache {
+  /**
+   * Helper to get SQL tables that do not change (e.g. Region, ServiceType).
+   */
+  static async getRows(name) {
+    if (this.cache.has(name)) return this.cache.get(name);
+    const rows = (await db.query('SELECT * FROM ' + name)).rows;
+    this.cache.set(name, rows);
+    return rows;
+  }
+};
+Cache.cache = new Map();
+Cache.REGION = 'Region';
+Cache.SERVICE_TYPE = 'ServiceType';
+
 module.exports = (app, passport) => {
   app.get('/', (req, res) => {
     res.render('index');
   });
 
   app.get('/signup', async (req, res) => {
-    const regions = (await db.query('SELECT * FROM Region')).rows;
+    const regions = await Cache.getRows(Cache.REGION);
     res.render('signup', { message: req.flash('signupMessage'), regions });
   });
 
@@ -36,6 +51,7 @@ module.exports = (app, passport) => {
   }));
 
   app.get('/profile', isLoggedIn, (req, res) => {
+    console.log(req.user);
     res.render('profile', { displayedUser: req.user });
   });
 
@@ -123,8 +139,8 @@ module.exports = (app, passport) => {
     const client = await db.connect();
     try {
       const results = (await client.query(query_s, objs)).rows;
-      const regions = (await client.query('SELECT * FROM Region')).rows;
-      const serviceTypes = (await client.query('SELECT * FROM ServiceType')).rows;
+      const regions = await Cache.getRows(Cache.REGION);
+      const serviceTypes = await Cache.getRows(Cache.SERVICE_TYPE);
 
       res.render('service', { results, regions, serviceTypes });
     } finally {
