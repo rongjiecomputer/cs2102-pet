@@ -25,3 +25,9 @@ footer {
 table {
   min-width: 100%;
 }
+#toast-center {
+  position: absolute;
+  max-width: 100px;
+  right: 0;
+  bottom: 0;
+}

@@ -122,7 +122,7 @@ module.exports = (app, passport) => {
 
     let query_s = "SELECT S.*, A.name FROM Service S JOIN Account A ON S.aid = A.aid";
     let next_placeholder_id = 1;
-    let where_clauses = [];
+    let where_clauses = ['S.acceptedBy IS NULL'];
     let objs = [];
 
     if (checkNotEmpty(req.query.name)) {
@@ -275,12 +275,21 @@ module.exports = (app, passport) => {
 
   app.get('/api/service/request', isLoggedIn, async (req, res) => {
     try {
-      console.log(req.query);
-      res.status(200).send({
-        success: true,
-      });
+      const petOwner = req.user;
+      const sid = Number.parseInt(req.query.sid);
+      if (!petOwner.isPetOwner) {
+        throw Error('Current user is not a pet owner.');
+      }
+      const client = await db.connect();
+      const data = await client.query('UPDATE Service SET acceptedBy = $1 WHERE sid = $2 RETURNING *', [petOwner.aid, sid]);
+      if (data.rowCount == 0) {
+        throw Error('Invalid sid');
+      }
+      await client.query(`INSERT INTO PetOwnerRecords(petOwnerID, careTakerID, sid)
+      VALUES ($1, $2, $3)`, [petOwner.aid, data.rows[0].aid, sid]);
+      res.status(200).send({ success: true });
     } catch (e) {
-
+      res.status(200).send({ success: false, error: e.message });
     }
   });
 
@@ -308,35 +317,35 @@ module.exports = (app, passport) => {
           "JOIN ServiceType ST ON ST.serviceType = SR.serviceType " +
           `WHERE CTR.careTakerID = ${req.user.aid}`;
 
-      console.log(query_ad);
+    console.log(query_ad);
 
-      const client = await db.connect();
-      try {
-          const results = (await client.query(query_ad)).rows;
-          res.render('caretakerRecords', { results });
-      } finally {
-          client.release();
-      }
+    const client = await db.connect();
+    try {
+      const results = (await client.query(query_ad)).rows;
+      res.render('caretakerRecords', { results });
+    } finally {
+      client.release();
+    }
   });
 
   app.get('/petownerRecords', isLoggedIn, async (req, res) => {
 
-      let query_ad = "SELECT A.name,ST.name as serviceName,POR.dateAccepted " +
-          "FROM PetOwnerRecords POR " +
-          "JOIN Account A ON A.aid=POR.careTakerID " +
-          "JOIN Service S ON S.sid = POR.sid " +
-          "JOIN ServiceType ST ON ST.serviceType = S.serviceType " +
-          `WHERE POR.petOwnerID = ${req.user.aid}`;
+    let query_ad = "SELECT A.name,ST.name as serviceName,POR.dateAccepted " +
+      "FROM PetOwnerRecords POR " +
+      "JOIN Account A ON A.aid=POR.careTakerID " +
+      "JOIN Service S ON S.sid = POR.sid " +
+      "JOIN ServiceType ST ON ST.serviceType = S.serviceType " +
+      `WHERE POR.petOwnerID = ${req.user.aid}`;
 
-      console.log(query_ad);
+    console.log(query_ad);
 
-      const client = await db.connect();
-      try {
-          const results = (await client.query(query_ad)).rows;
-          res.render('petownerRecords', { results });
-      } finally {
-          client.release();
-      }
+    const client = await db.connect();
+    try {
+      const results = (await client.query(query_ad)).rows;
+      res.render('petownerRecords', { results });
+    } finally {
+      client.release();
+    }
   });
 
   app.get('/logout', (req, res) => {
