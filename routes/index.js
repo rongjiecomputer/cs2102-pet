@@ -89,7 +89,6 @@ module.exports = (app, passport) => {
 
   app.post('/edit/phone', async (req, res) => {
     await edit.setPhone(req.user.aid, req.body.newPhone);
-    //res.status(200).send({ success: true , message: 'Phone edit success'});
     res.redirect('/profile');
   });
   // Edit Page (End)
@@ -98,8 +97,11 @@ module.exports = (app, passport) => {
   app.get('/profile/pets', isLoggedIn, async (req, res) => {
     const petsData = await pets.displayPets(req.user.aid);
     const breedData = await pets.getBreeds();
+    console.log('Get breeds success!');
     const mcData = await pets.getMC();
-    res.render('pets', { displayedUser: req.user, pets: petsData, breeds: breedData, mc: mcData});
+    const petMC = await pets.getPetMC();
+    console.log('Get medical condition success!');
+    res.render('pets', { displayedUser: req.user, pets: petsData, breeds: breedData, mc: mcData, petMC: petMC});
   });
 
   app.post('/pets/add', async (req, res) => {
