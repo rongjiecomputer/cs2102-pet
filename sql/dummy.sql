@@ -17,3 +17,9 @@ INSERT INTO Service (aid, serviceType, price, dateStart, dateEnd)
 SELECT aid, 2, 5, '2019-05-03', '2019-05-03' FROM Account WHERE name = 'Alex';
 INSERT INTO Service (aid, serviceType, price, dateStart, dateEnd)
 SELECT aid, 2, 6, '2019-05-04', '2019-05-07' FROM Account WHERE name = 'Alex';
+
+INSERT INTO Pet VALUES(2, 'Max', 30, '2019-01-02', 1, 'Dog that loves fun');
+INSERT INTO PetMedicalCondition VALUES(2, 'Max', 1);
+INSERT INTO PetMedicalCondition VALUES(2, 'Max', 2);
+INSERT INTO Pet VALUES(2, 'Mocha', 20, '2019-03-01', 3, NULL);
+INSERT INTO PetMedicalCondition VALUES(2, 'Mocha', 10);

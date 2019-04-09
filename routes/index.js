@@ -54,15 +54,19 @@ module.exports = (app, passport) => {
     failureFlash: true
   }));
 
-  app.get('/profile', isLoggedIn, (req, res) => {
-    res.render('profile', { displayedUser: req.user });
+  app.get('/profile', isLoggedIn, async (req, res) => {
+    const serviceTypes = await Cache.getRows(Cache.SERVICE_TYPE);
+    let pets = null;
+    if (req.user.isPetOwner) {
+      pets = (await db.query(`SELECT * FROM Pet where Pet.aid = $1`, [req.user.aid])).rows;
+    }
+    res.render('profile', { displayedUser: req.user, serviceTypes, pets });
   });
 
 
 
   // Edit Page (Start)
-
-    app.get('/profile/edit', isLoggedIn, (req, res) => {
+  app.get('/profile/edit', isLoggedIn, (req, res) => {
     res.render('edit', { message: req.flash('editProfileMessage') });
   });
 
@@ -85,7 +89,6 @@ module.exports = (app, passport) => {
 
   app.post('/edit/phone', async (req, res) => {
     await edit.setPhone(req.user.aid, req.body.newPhone);
-    //res.status(200).send({ success: true , message: 'Phone edit success'});
     res.redirect('/profile');
   });
   // Edit Page (End)
@@ -94,13 +97,16 @@ module.exports = (app, passport) => {
   app.get('/profile/pets', isLoggedIn, async (req, res) => {
     const petsData = await pets.displayPets(req.user.aid);
     const breedData = await pets.getBreeds();
+    console.log('Get breeds success!');
     const mcData = await pets.getMC();
-    res.render('pets', { displayedUser: req.user, pets: petsData, breeds: breedData, mc: mcData});
+    const petMC = await pets.getPetMC();
+    console.log('Get medical condition success!');
+    res.render('pets', { displayedUser: req.user, pets: petsData, breeds: breedData, mc: mcData, petMC: petMC});
   });
 
   app.post('/pets/add', async (req, res) => {
-    await pets.addPet(req.user.aid, req.body.petName, req.body.petWeight,req.body.petBday, req.body.petBreed,
-        req.body.petMC, req.body.petRemarks);
+    await pets.addPet(req.user.aid, req.body.petName, req.body.petWeight, req.body.petBday, req.body.petBreed,
+      req.body.petMC, req.body.petRemarks);
     res.redirect('/profile/pets');
   });
   // Pets Page (End)
@@ -116,7 +122,7 @@ module.exports = (app, passport) => {
 
     let query_s = "SELECT S.*, A.name FROM Service S JOIN Account A ON S.aid = A.aid";
     let next_placeholder_id = 1;
-    let where_clauses = [];
+    let where_clauses = ['S.acceptedBy IS NULL'];
     let objs = [];
 
     if (checkNotEmpty(req.query.name)) {
@@ -174,7 +180,7 @@ module.exports = (app, passport) => {
       }
     }
 
-    query_s += ' GROUP BY S.aid, S.serviceType';
+    query_s += ' GROUP BY S.sid, S.aid, A.name, S.serviceType';
 
     const client = await db.connect();
     try {
@@ -269,12 +275,21 @@ module.exports = (app, passport) => {
 
   app.get('/api/service/request', isLoggedIn, async (req, res) => {
     try {
-      console.log(req.query);
-      res.status(200).send({
-        success: true,
-      });
-    } catch(e) {
-
+      const petOwner = req.user;
+      const sid = Number.parseInt(req.query.sid);
+      if (!petOwner.isPetOwner) {
+        throw Error('Current user is not a pet owner.');
+      }
+      const client = await db.connect();
+      const data = await client.query('UPDATE Service SET acceptedBy = $1 WHERE sid = $2 RETURNING *', [petOwner.aid, sid]);
+      if (data.rowCount == 0) {
+        throw Error('Invalid sid');
+      }
+      await client.query(`INSERT INTO PetOwnerRecords(petOwnerID, careTakerID, sid)
+      VALUES ($1, $2, $3)`, [petOwner.aid, data.rows[0].aid, sid]);
+      res.status(200).send({ success: true });
+    } catch (e) {
+      res.status(200).send({ success: false, error: e.message });
     }
   });
 
@@ -302,35 +317,35 @@ module.exports = (app, passport) => {
           "JOIN ServiceType ST ON ST.serviceType = SR.serviceType " +
           `WHERE CTR.careTakerID = ${req.user.aid}`;
 
-      console.log(query_ad);
+    console.log(query_ad);
 
-      const client = await db.connect();
-      try {
-          const results = (await client.query(query_ad)).rows;
-          res.render('caretakerRecords', { results });
-      } finally {
-          client.release();
-      }
+    const client = await db.connect();
+    try {
+      const results = (await client.query(query_ad)).rows;
+      res.render('caretakerRecords', { results });
+    } finally {
+      client.release();
+    }
   });
 
   app.get('/petownerRecords', isLoggedIn, async (req, res) => {
 
-      let query_ad = "SELECT A.name,ST.name as serviceName,POR.dateAccepted " +
-          "FROM PetOwnerRecords POR " +
-          "JOIN Account A ON A.aid=POR.careTakerID " +
-          "JOIN Service S ON S.sid = POR.sid " +
-          "JOIN ServiceType ST ON ST.serviceType = S.serviceType " +
-          `WHERE POR.petOwnerID = ${req.user.aid}`;
+    let query_ad = "SELECT A.name,ST.name as serviceName,POR.dateAccepted " +
+      "FROM PetOwnerRecords POR " +
+      "JOIN Account A ON A.aid=POR.careTakerID " +
+      "JOIN Service S ON S.sid = POR.sid " +
+      "JOIN ServiceType ST ON ST.serviceType = S.serviceType " +
+      `WHERE POR.petOwnerID = ${req.user.aid}`;
 
-      console.log(query_ad);
+    console.log(query_ad);
 
-      const client = await db.connect();
-      try {
-          const results = (await client.query(query_ad)).rows;
-          res.render('petownerRecords', { results });
-      } finally {
-          client.release();
-      }
+    const client = await db.connect();
+    try {
+      const results = (await client.query(query_ad)).rows;
+      res.render('petownerRecords', { results });
+    } finally {
+      client.release();
+    }
   });
 
   app.get('/logout', (req, res) => {
