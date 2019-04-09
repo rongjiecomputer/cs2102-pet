@@ -356,15 +356,13 @@ module.exports = (app, passport) => {
   });
 
   app.get('/advertisedrequestservice', isLoggedIn, async (req, res) => {
-
-    let query_ad = `SELECT S.*, A.name FROM Service S JOIN Account A ON S.aid = A.aid WHERE ${req.user.aid} = A.aid`;
-
-    console.log(query_ad);
+    let query_ad = `SELECT S.*, A.name FROM ServiceRequest S JOIN Account A ON S.aid = A.aid WHERE ${req.user.aid} = A.aid`;
 
     const client = await db.connect();
     try {
       const results = (await client.query(query_ad)).rows;
-      res.render('advertisedrequestservice', { results });
+      const serviceTypes = await Cache.getRows(Cache.SERVICE_TYPE);
+      res.render('advertisedrequestservice', { results, serviceTypes });
     } finally {
       client.release();
     }
