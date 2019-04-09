@@ -1,4 +1,4 @@
-<%- include('header', {title: 'Requests '}); -%>
+<%- include('header', {title: 'Services'}); -%>
 
 <div class="container-fluid vertical-stretch">
   <div class="row vertical-stretch">
@@ -10,7 +10,7 @@
           <h3>Filter</h3>
 
           <div class="form-group">
-            <label>Care taker name</label>
+            <label>Pet Owner name</label>
             <input type="text" class="form-control" name="name">
           </div>
 
@@ -25,7 +25,7 @@
           </div>
 
           <div class="form-group">
-            <label>Price (SGD)</label>
+            <label>Max salary (SGD)</label>
             <div class="input-group mb-3">
               <select class="form-control" name="priceCompare">
                 <option value="eq">Equal</option>
@@ -37,7 +37,7 @@
           </div>
 
           <div class="form-group">
-            <label>Care taker region</label>
+            <label>Pet Owner region</label>
             <select class="form-control" name="region">
               <option value="-1">Any</option>
               <% for (const row of regions) { %>
@@ -48,7 +48,7 @@
 
 
           <div class="form-group">
-            <label>Availability</label>
+            <label>Duration</label>
             <div class="input-group mb-3">
               <input type="date" class="form-control" name="dateStart">
               <input type="date" class="form-control" name="dateEnd">
@@ -60,7 +60,6 @@
           <h3>Sort by</h3>
 
           <div class="form-group">
-            <label>Care taker region</label>
             <select class="form-control" name="sort">
               <option value="lowPrice">Lowest price first</option>
               <option value="highPrice">Highest price first</option>
@@ -80,26 +79,28 @@
       <div class="table-responsive">
         <table class="table-striped">
           <thead>
-          <th>Name</th>
-          <th>Service Type</th>
-          <th>Price (SGD)</th>
-          <th>Start date</th>
-          <th>End date</th>
-          <% if (user.isPetOwner) { %><th>Action</th><% } %>
+            <th>Name</th>
+            <th>Service Type</th>
+            <th>Price (SGD)</th>
+            <th>Start date</th>
+            <th>End date</th>
+            <th>Pet Name</th>
+            <% if (user.isPetOwner) { %><th>Action</th><% } %>
           </thead>
           <tbody>
-          <% for (const row of results) { %>
-          <tr>
-            <td><%= row.name %></td>
-            <td><%= serviceTypes[row.servicetype - 1].name %></td>
-            <td><%= row.price %></td>
-            <td><%= row.datestart.toLocaleDateString() %></td>
-            <td><%= row.dateend.toLocaleDateString() %></td>
-            <% if (user.isPetOwner) { %>
-            <td><button class="btn-primary" data-sid="<%= row.sid %>">Request</button></td>
+            <% for (const row of results) { %>
+            <tr>
+              <td><%= row.name %></td>
+              <td><%= serviceTypes[row.servicetype - 1].name %></td>
+              <td><%= row.price %></td>
+              <td><%= row.datestart.toLocaleDateString() %></td>
+              <td><%= row.dateend.toLocaleDateString() %></td>
+              <td><%= row.petName() %></td>
+              <% if (user.isPetOwner) { %>
+              <td><button class="btn-primary" data-sid="<%= row.sid %>">Request</button></td>
+              <% } %>
+            </tr>
             <% } %>
-          </tr>
-          <% } %>
           </tbody>
         </table>
       </div>
@@ -109,18 +110,35 @@
   </div>
 </div>
 
-<script>
-    (function () {
-        const trs = document.querySelectorAll('tbody > tr');
-        for (const tr of trs) {
-            const btn = tr.querySelector('button');
-            btn.addEventListener('click', async (e) => {
-                const res = await fetch('/api/service/request?sid=' + btn.dataset.sid);
-                const json = await res.json();
+<div id="toast-center"></div>
 
-            });
+<template id="toast-tpl">
+  <div class="toast-body">
+    <span class="toast-msg"></span>
+    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+      <span aria-hidden="true">×</span>
+    </button>
+  </div>
+</template>
+
+<script src="/js/toast.js"></script>
+<script>
+  (function () {
+    const trs = document.querySelectorAll('tbody > tr');
+    for (const tr of trs) {
+      const btn = tr.querySelector('button');
+      btn.addEventListener('click', async (e) => {
+        const res = await fetch('/api/requests/request?srid=' + btn.dataset.srid);
+        const json = await res.json();
+        if (json.success) {
+          btn.disabled = true;
+          createSuccessToast('Success!').show();
+        } else {
+          createErrorToast(json.error).show();
         }
-    })();
+      });
+    }
+  })();
 </script>
 
 <%- include('footer'); -%>
