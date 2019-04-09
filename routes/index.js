@@ -194,6 +194,27 @@ module.exports = (app, passport) => {
     }
   });
 
+  app.get('/api/service/request', isLoggedIn, async (req, res) => {
+    try {
+      const petOwner = req.user;
+      const sid = Number.parseInt(req.query.sid);
+      if (!petOwner.isPetOwner) {
+        throw Error('Current user is not a pet owner.');
+      }
+      const client = await db.connect();
+      const data = await client.query('UPDATE Service SET acceptedBy = $1 WHERE sid = $2 RETURNING *', [petOwner.aid, sid]);
+      if (data.rowCount == 0) {
+        throw Error('Invalid sid');
+      }
+      await client.query(`INSERT INTO PetOwnerRecords(petOwnerID, careTakerID, sid)
+      VALUES ($1, $2, $3)`, [petOwner.aid, data.rows[0].aid, sid]);
+      res.status(200).send({ success: true });
+    } catch (e) {
+      res.status(200).send({ success: false, error: e.message });
+    }
+  });
+
+
     app.get('/requests', isLoggedIn, async (req, res) => {
         function checkNotEmpty(x) {
             return typeof x === 'string' && x !== '';
