@@ -114,7 +114,7 @@ module.exports = (app, passport) => {
 
   // Edit Page (Start)
   app.get('/profile/edit', isLoggedIn, (req, res) => {
-    res.render('edit', { message: req.flash('editProfileMessage') });
+    res.render('edit', {message: req.flash('editProfileMessage')});
   });
 
   app.post('/edit/password', async (req, res) => {
@@ -122,8 +122,7 @@ module.exports = (app, passport) => {
     if (isSame) {
       await edit.setPassword(req.user.aid, req.body.newPwd, req.user.hash);
       res.redirect('/profile');
-    }
-    else {
+    } else {
       console.log('Comparison fail!');
       res.redirect('/profile/edit');
     }
@@ -143,16 +142,30 @@ module.exports = (app, passport) => {
   // Pets Page (Start)
   app.get('/profile/pets', isLoggedIn, async (req, res) => {
     const petsData = await pets.displayPets(req.user.aid);
+    console.log('Get pets success!');
     const breeds = await Cache.getRows(Cache.BREED);
+    console.log('Get breeds success!');
     const mc = await Cache.getRows(Cache.MEDICAL_COND);
+    console.log('Get list of medical condition success!');
     const petMC = await pets.getPetMC();
-    console.log('Get medical condition success!');
+    console.log('Get pets medical condition success!');
     res.render('pets', { displayedUser: req.user, pets: petsData, breeds, mc, petMC });
+
   });
 
   app.post('/pets/add', async (req, res) => {
     await pets.addPet(req.user.aid, req.body.petName, req.body.petWeight, req.body.petBday, req.body.petBreed,
       req.body.petMC, req.body.petRemarks);
+    res.redirect('/profile/pets');
+  });
+
+  app.post('/pets/edit', async (req, res) => {
+    await pets.editPet(req.user.aid, req.body.petName, req.body.petWeight, req.body.petMC, req.body.petRemarks);
+    res.redirect('/profile/pets');
+  });
+
+  app.post('/pets/delete', async (req, res) => {
+    await pets.deletePet(req.user.aid, req.body.delete);
     res.redirect('/profile/pets');
   });
   // Pets Page (End)
