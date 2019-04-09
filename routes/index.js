@@ -214,6 +214,7 @@ module.exports = (app, passport) => {
     }
   });
 
+
     app.get('/requests', isLoggedIn, async (req, res) => {
         function checkNotEmpty(x) {
             return typeof x === 'string' && x !== '';
