@@ -4,6 +4,8 @@ const session = require('express-session');
 const flash = require('connect-flash');
 const passport = require('passport');
 const path = require('path');
+const multer = require('multer');
+const upload = multer();
 
 const app = express();
 
@@ -12,8 +14,9 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(upload.array());
 app.use(session({ secret: 'secret', resave: false, saveUninitialized: false }));
 app.use(passport.initialize());
 app.use(passport.session());
