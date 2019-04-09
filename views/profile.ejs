@@ -56,7 +56,7 @@
             <form id="createServiceRequestForm">
               <div class="form-group">
                 <label>Pet</label>
-                <select class="form-control" name="petName">
+                <select class="form-control" name="petName" required>
                   <% for (const pet of pets) { %>
                   <option value="<%= pet.name %>"><%= pet.name %></option>
                   <% } %>
@@ -64,7 +64,7 @@
               </div>
               <div class="form-group">
                 <label>Service type</label>
-                <select class="form-control" name="serviceType">
+                <select class="form-control" name="serviceType" required>
                   <% for (const row of serviceTypes) { %>
                   <option value="<%= row.servicetype %>"><%= row.name %></option>
                   <% } %>
@@ -82,10 +82,8 @@
                 <label>End Date</label>
                 <input class="form-control" type="date" name="dateEnd" required>
               </div>
+              <input type="submit" class="btn btn-primary" value="Submit request">
             </form>
-          </div>
-          <div class="modal-footer">
-            <button id="createServiceRequestBtn" type="button" class="btn btn-primary">Submit request</button>
           </div>
         </div>
       </div>
@@ -125,7 +123,7 @@
             <form id="createServiceForm">
               <div class="form-group">
                 <label>Service type</label>
-                <select class="form-control" name="serviceType">
+                <select class="form-control" name="serviceType" required>
                   <% for (const row of serviceTypes) { %>
                   <option value="<%= row.servicetype %>"><%= row.name %></option>
                   <% } %>
@@ -143,10 +141,8 @@
                 <label>End Date</label>
                 <input class="form-control" type="date" name="dateEnd" required>
               </div>
+              <input type="submit" class="btn btn-primary" value="Submit service">
             </form>
-          </div>
-          <div class="modal-footer">
-            <button id="createServiceBtn" type="button" class="btn btn-primary">Advertise Service!</button>
           </div>
         </div>
       </div>
@@ -185,11 +181,9 @@
 <script src="/js/toast.js"></script>
 <script>
   (function () {
-    const btn = document.querySelector('#createServiceRequestBtn');
-    if (btn == null) return;
-    btn.addEventListener('click', async (e) => {
-      const form = document.querySelector('#createServiceRequestForm');
-      const formData = new FormData(form);
+    document.querySelector('#createServiceRequestForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
       const res = await fetch('/api/requests/create', {
         method: "POST",
         body: formData,
@@ -201,13 +195,9 @@
         createErrorToast(json.error).toast('show');
       }
     });
-  })();
-  (function () {
-    const btn = document.querySelector('#createServiceBtn');
-    if (btn == null) return;
-    btn.addEventListener('click', async (e) => {
-      const form = document.querySelector('#createServiceForm');
-      const formData = new FormData(form);
+    document.querySelector('#createServiceForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
       const res = await fetch('/api/service/create', {
         method: "POST",
         body: formData,
