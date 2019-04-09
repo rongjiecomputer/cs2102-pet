@@ -1,7 +1,7 @@
-<%- include('header', {title: 'Advertised Requests/Services'}); -%>
+<%- include('header', {title: 'Advertised Service Requests'}); -%>
 
 <main class="container">
-  <h2>Your advertised requests/services</h2>
+  <h2>Your advertised service requests</h2>
   <% if (results.length == 0) { %>
   <div class="">No result found.</div>
   <% } else { %>
@@ -10,7 +10,7 @@
       <thead>
         <th>Name</th>
         <th>Service Type</th>
-        <th>Price (SGD)</th>
+        <th>Max Price (SGD)</th>
         <th>Start date</th>
         <th>End date</th>
       </thead>
@@ -19,7 +19,7 @@
         <tr>
           <td><%= row.name %></td>
           <td><%= serviceTypes[row.servicetype - 1].name %></td>
-          <td><%= row.price %></td>
+          <td><%= row.maxprice %></td>
           <td><%= row.datestart.toLocaleDateString() %></td>
           <td><%= row.dateend.toLocaleDateString() %></td>
         </tr>
