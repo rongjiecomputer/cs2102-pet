@@ -194,85 +194,6 @@ module.exports = (app, passport) => {
     }
   });
 
-  app.get('/requests', isLoggedIn, async (req, res) => {
-      function checkNotEmpty(x) {
-          return typeof x === 'string' && x !== '';
-      }
-
-      let query_s = "SELECT S.*, A.name FROM Service S JOIN Account A ON S.aid = A.aid";
-      let next_placeholder_id = 1;
-      let where_clauses = [];
-      let objs = [];
-
-      if (checkNotEmpty(req.query.name)) {
-          where_clauses.push(`A.name = $${next_placeholder_id++}`);
-          objs.push(req.query.name);
-      }
-
-      if (checkNotEmpty(req.query.serviceType)) {
-          let x = Number.parseInt(req.query.serviceType);
-          if (x != -1) {
-              where_clauses.push(`S.serviceType = $${next_placeholder_id++}`);
-              objs.push(x);
-          }
-      }
-
-      if (checkNotEmpty(req.query.priceCompare) && checkNotEmpty(req.query.price)) {
-          let x = Number.parseInt(req.query.price);
-          let op = '=';
-          switch (req.query.priceCompare) {
-              case 'eq': op = '='; break;
-              case 'lt': op = '<'; break;
-              case 'gt': op = '>'; break;
-          }
-          where_clauses.push(`S.price ${op} $${next_placeholder_id++}`);
-          objs.push(x);
-      }
-
-      if (checkNotEmpty(req.query.region)) {
-          let x = Number.parseInt(req.query.region);
-          if (x != -1) {
-              where_clauses.push(`A.region = $${next_placeholder_id++}`);
-              objs.push(x);
-          }
-      }
-
-      if (checkNotEmpty(req.query.dateStart)) {
-          where_clauses.push(`S.dateStart <= $${next_placeholder_id++}`);
-          objs.push(req.query.dateStart);
-      }
-      if (checkNotEmpty(req.query.dateEnd)) {
-          where_clauses.push(`S.dateEnd >= $${next_placeholder_id++}`);
-          objs.push(req.query.dateEnd);
-      }
-
-      if (where_clauses.length > 0) {
-          query_s += ' WHERE ';
-          query_s += where_clauses.join(' AND ');
-      }
-
-      if (checkNotEmpty(req.query.sort)) {
-          if (req.query.sort === 'highPrice') {
-              query_s += ' ORDER BY S.price DESC';
-          } else {
-              query_s += ' ORDER BY S.price';
-          }
-      }
-
-      query_s += ' GROUP BY S.aid, S.serviceType';
-
-      const client = await db.connect();
-      try {
-          const results = (await client.query(query_s, objs)).rows;
-          const regions = await Cache.getRows(Cache.REGION);
-          const serviceTypes = await Cache.getRows(Cache.SERVICE_TYPE);
-
-          res.render('requests', { results, regions, serviceTypes });
-      } finally {
-          client.release();
-      }
-  });
-
   app.get('/api/service/request', isLoggedIn, async (req, res) => {
     try {
       const petOwner = req.user;
@@ -286,6 +207,105 @@ module.exports = (app, passport) => {
         throw Error('Invalid sid');
       }
       await client.query(`INSERT INTO PetOwnerRecords(petOwnerID, careTakerID, sid)
+      VALUES ($1, $2, $3)`, [petOwner.aid, data.rows[0].aid, sid]);
+      res.status(200).send({ success: true });
+    } catch (e) {
+      res.status(200).send({ success: false, error: e.message });
+    }
+  });
+
+    app.get('/requests', isLoggedIn, async (req, res) => {
+        function checkNotEmpty(x) {
+            return typeof x === 'string' && x !== '';
+        }
+
+        let query_s = "SELECT S.*, A.name FROM ServiceRequest S JOIN Account A ON S.aid = A.aid";
+        let next_placeholder_id = 1;
+        let where_clauses = ['S.acceptedBy IS NULL'];
+        let objs = [];
+
+        if (checkNotEmpty(req.query.name)) {
+            where_clauses.push(`A.name = $${next_placeholder_id++}`);
+            objs.push(req.query.name);
+        }
+
+        if (checkNotEmpty(req.query.serviceType)) {
+            let x = Number.parseInt(req.query.serviceType);
+            if (x != -1) {
+                where_clauses.push(`S.serviceType = $${next_placeholder_id++}`);
+                objs.push(x);
+            }
+        }
+
+        if (checkNotEmpty(req.query.priceCompare) && checkNotEmpty(req.query.price)) {
+            let x = Number.parseInt(req.query.price);
+            let op = '=';
+            switch (req.query.priceCompare) {
+                case 'eq': op = '='; break;
+                case 'lt': op = '<'; break;
+                case 'gt': op = '>'; break;
+            }
+            where_clauses.push(`S.price ${op} $${next_placeholder_id++}`);
+            objs.push(x);
+        }
+
+        if (checkNotEmpty(req.query.region)) {
+            let x = Number.parseInt(req.query.region);
+            if (x != -1) {
+                where_clauses.push(`A.region = $${next_placeholder_id++}`);
+                objs.push(x);
+            }
+        }
+
+        if (checkNotEmpty(req.query.dateStart)) {
+            where_clauses.push(`S.dateStart <= $${next_placeholder_id++}`);
+            objs.push(req.query.dateStart);
+        }
+        if (checkNotEmpty(req.query.dateEnd)) {
+            where_clauses.push(`S.dateEnd >= $${next_placeholder_id++}`);
+            objs.push(req.query.dateEnd);
+        }
+
+        if (where_clauses.length > 0) {
+            query_s += ' WHERE ';
+            query_s += where_clauses.join(' AND ');
+        }
+
+        if (checkNotEmpty(req.query.sort)) {
+            if (req.query.sort === 'highPrice') {
+                query_s += ' ORDER BY S.price DESC';
+            } else {
+                query_s += ' ORDER BY S.price';
+            }
+        }
+
+        query_s += ' GROUP BY S.srid, S.aid, A.name, S.serviceType';
+
+        const client = await db.connect();
+        try {
+            const results = (await client.query(query_s, objs)).rows;
+            const regions = await Cache.getRows(Cache.REGION);
+            const serviceTypes = await Cache.getRows(Cache.SERVICE_TYPE);
+
+            res.render('requests', { results, regions, serviceTypes });
+        } finally {
+            client.release();
+        }
+    });
+
+  app.get('/api/requests/request', isLoggedIn, async (req, res) => {
+    try {
+      const petOwner = req.user;
+      const sid = Number.parseInt(req.query.sid);
+      if (!petOwner.isPetOwner) {
+        throw Error('Current user is not a pet owner.');
+      }
+      const client = await db.connect();
+      const data = await client.query('UPDATE Service SET acceptedBy = $1 WHERE srid = $2 RETURNING *', [petOwner.aid, sid]);
+      if (data.rowCount == 0) {
+        throw Error('Invalid srid');
+      }
+      await client.query(`INSERT INTO PetOwnerRecords(petOwnerID, careTakerID, srid)
       VALUES ($1, $2, $3)`, [petOwner.aid, data.rows[0].aid, sid]);
       res.status(200).send({ success: true });
     } catch (e) {
