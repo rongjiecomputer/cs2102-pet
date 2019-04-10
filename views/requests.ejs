@@ -81,7 +81,7 @@
           <thead>
             <th>Name</th>
             <th>Service Type</th>
-            <th>Price (SGD)</th>
+            <th>Max Price (SGD)</th>
             <th>Start date</th>
             <th>End date</th>
             <th>Pet Name</th>
@@ -92,7 +92,7 @@
             <tr>
               <td><%= row.name %></td>
               <td><%= serviceTypes[row.servicetype - 1].name %></td>
-              <td><%= row.price %></td>
+              <td><%= row.maxprice %></td>
               <td><%= row.datestart.toLocaleDateString() %></td>
               <td><%= row.dateend.toLocaleDateString() %></td>
               <td><%= row.petname %></td>
