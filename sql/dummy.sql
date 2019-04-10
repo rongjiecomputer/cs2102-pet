@@ -46,6 +46,34 @@ SELECT aid, 2, 5, '2019-05-03', '2019-05-03' FROM Account WHERE name = 'Alex';
 INSERT INTO Service (aid, serviceType, price, dateStart, dateEnd)
 SELECT aid, 2, 6, '2019-05-04', '2019-05-07' FROM Account WHERE name = 'Alex';
 
+-- Services advertised by Charlie
+
+INSERT INTO Service (aid, serviceType, price, dateStart, dateEnd)
+SELECT aid, 6, 100, '2019-06-17', '2020-05-02' FROM Account WHERE name = 'Charlie';
+INSERT INTO Service (aid, serviceType, price, dateStart, dateEnd)
+SELECT aid, 5, 1, '2019-04-13', '2019-05-03' FROM Account WHERE name = 'Charlie';
+INSERT INTO Service (aid, serviceType, price, dateStart, dateEnd)
+SELECT aid, 4, 7, '2019-05-23', '2019-06-02' FROM Account WHERE name = 'Charlie';
+
+-- Services advertised by Elsa
+
+INSERT INTO Service (aid, serviceType, price, dateStart, dateEnd)
+SELECT aid, 2, 10, '2019-05-11', '2019-09-11' FROM Account WHERE name = 'Elsa';
+INSERT INTO Service (aid, serviceType, price, dateStart, dateEnd)
+SELECT aid, 3, 44, '2019-07-03', '2019-07-12' FROM Account WHERE name = 'Elsa';
+INSERT INTO Service (aid, serviceType, price, dateStart, dateEnd)
+SELECT aid, 7, 12, '2019-12-04', '2019-12-04' FROM Account WHERE name = 'Elsa';
+
+-- Services advertised by Gerald
+
+INSERT INTO Service (aid, serviceType, price, dateStart, dateEnd)
+SELECT aid, 3, 35, '2019-11-11', '2019-11-12' FROM Account WHERE name = 'Gerald';
+INSERT INTO Service (aid, serviceType, price, dateStart, dateEnd)
+SELECT aid, 4, 5, '2019-12-12', '2019-12-13' FROM Account WHERE name = 'Gerald';
+INSERT INTO Service (aid, serviceType, price, dateStart, dateEnd)
+SELECT aid, 6, 69, '2019-06-06', '2020-04-03' FROM Account WHERE name = 'Gerald';
+
+
 -- Bob's Pets
 INSERT INTO Pet(aid,name,weight,birthday,breed,remark) VALUES
 (2, 'Max', 30, '2019-01-02', 1, 'Dog that loves fun');
