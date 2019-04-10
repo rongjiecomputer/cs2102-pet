@@ -102,7 +102,7 @@ module.exports = (app, passport) => {
       const data = await client.query(
         `INSERT INTO Service(aid, serviceType, price, dateStart, dateEnd)
         VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-        [careTaker.aid, req.body.serviceType, req.body.price, req.body.dateStart, req.body.dateEnd]);
+        [careTaker.aid,Number.parseInt( req.body.serviceType), Number.parseInt( req.body.price), req.body.dateStart, req.body.dateEnd]);
       if (data.rowCount == 0) {
         throw Error('Failed to create new service request');
       }
@@ -114,28 +114,46 @@ module.exports = (app, passport) => {
 
   // Edit Page (Start)
   app.get('/profile/edit', isLoggedIn, (req, res) => {
-    res.render('edit', {message: req.flash('editProfileMessage')});
+    res.render('edit', {message: req.flash('info')});
   });
 
   app.post('/edit/password', async (req, res) => {
     const isSame = await edit.checkPassword(req.user.aid, req.body.oldPwd, req.user.hash);
     if (isSame) {
-      await edit.setPassword(req.user.aid, req.body.newPwd, req.user.hash);
-      res.redirect('/profile');
+      const success = await edit.setPassword(req.user.aid, req.body.newPwd, req.user.hash);
+      if (success){
+        req.flash('info', 'Edit password success!');
+      }
+      else{
+        req.flash('info', 'Edit password fail!');
+      }
+      res.redirect('/profile/edit');
     } else {
-      console.log('Comparison fail!');
+      req.flash('info', 'Old password is not the same!');
       res.redirect('/profile/edit');
     }
   });
 
   app.post('/edit/email', async (req, res) => {
-    await edit.setEmail(req.user.aid, req.body.newEmail);
-    res.redirect('/profile');
+    const success = await edit.setEmail(req.user.aid, req.body.newEmail);
+    if (success){
+      req.flash('info', 'Edit email success!');
+    }
+    else{
+      req.flash('info', 'Edit email fail!');
+    }
+    res.redirect('/profile/edit');
   });
 
   app.post('/edit/phone', async (req, res) => {
-    await edit.setPhone(req.user.aid, req.body.newPhone);
-    res.redirect('/profile');
+    const success = await edit.setPhone(req.user.aid, req.body.newPhone);
+    if (success){
+      req.flash('info', 'Edit phone success!');
+    }
+    else{
+      req.flash('info', 'Edit phone fail!');
+    }
+    res.redirect('/profile/edit');
   });
   // Edit Page (End)
 
@@ -150,7 +168,6 @@ module.exports = (app, passport) => {
     const petMC = await pets.getPetMC();
     console.log('Get pets medical condition success!');
     res.render('pets', { displayedUser: req.user, pets: petsData, breeds, mc, petMC });
-
   });
 
   app.post('/pets/add', async (req, res) => {
@@ -292,15 +309,15 @@ module.exports = (app, passport) => {
       }
     }
 
-    if (checkNotEmpty(req.query.priceCompare) && checkNotEmpty(req.query.price)) {
-      let x = Number.parseInt(req.query.price);
+    if (checkNotEmpty(req.query.priceCompare) && checkNotEmpty(req.query.maxPrice)) {
+      let x = Number.parseInt(req.query.maxPrice);
       let op = '=';
       switch (req.query.priceCompare) {
         case 'eq': op = '='; break;
         case 'lt': op = '<'; break;
         case 'gt': op = '>'; break;
       }
-      where_clauses.push(`S.price ${op} $${next_placeholder_id++}`);
+      where_clauses.push(`S.maxPrice ${op} $${next_placeholder_id++}`);
       objs.push(x);
     }
 
@@ -336,8 +353,6 @@ module.exports = (app, passport) => {
       }
     }
 
-
-
     const client = await db.connect();
     try {
       console.log(query_s);
@@ -352,28 +367,30 @@ module.exports = (app, passport) => {
     }
   });
 
-  app.get('/api/requests/request', isLoggedIn, async (req, res) => {
-    const client = await db.connect();
-    try {
-      const careTaker = req.user;
-      const srid = Number.parseInt(req.query.srid);
-      if (!careTaker.isCareTaker) {
-        throw Error('Current user is not a care taker');
+  app.get('/api/requests/accept', isLoggedIn, async (req, res) => {
+      try {
+          const careTaker = req.user;
+          const srid = Number.parseInt(req.query.srid);
+          if (!careTaker.isCareTaker) {
+              throw Error('Current user is not a pet owner.');
+          }
+          const client = await db.connect();
+          console.log(careTaker.aid);
+          console.log(srid);
+
+          const data = await client.query('UPDATE ServiceRequest SET acceptedBy = $1 WHERE srid = $2 RETURNING *', [careTaker.aid, srid]);
+          if (data.rowCount == 0) {
+              throw Error('Invalid srid');
+          }
+          await client.query(`INSERT INTO CareTakerRecords(petOwnerID, careTakerID, srid)
+    VALUES ($1, $2, $3)`, [data.rows[0].aid , careTaker.aid , srid]);
+          res.status(200).send({ success: true });
+      } catch (e) {
+          res.status(200).send({ success: false, error: e.message });
       }
 
-      const data = await client.query('UPDATE Service SET acceptedBy = $1 WHERE srid = $2 RETURNING *', [careTaker.aid, srid]);
-      if (data.rowCount == 0) {
-        throw Error('Invalid srid');
-      }
-      await client.query(`INSERT INTO CareTakerRecords( careTakerID,petOwnerID, srid)
-      VALUES ($1, $2, $3)`, [careTaker.aid, data.rows[0].aid, srid]);
-      res.status(200).send({ success: true });
-    } catch (e) {
-      res.status(200).send({ success: false, error: e.message });
-    } finally {
-      client.release();
-    }
   });
+
 
   app.get('/advertisedRequest', isLoggedIn, async (req, res) => {
     let query_ad = `SELECT S.*, A.name FROM ServiceRequest S JOIN Account A ON S.aid = A.aid WHERE ${req.user.aid} = A.aid`;

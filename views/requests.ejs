@@ -32,7 +32,7 @@
                 <option value="lt">Less than</option>
                 <option value="gt">Greater than</option>
               </select>
-              <input type="number" class="form-control" min="0" name="price">
+              <input type="number" class="form-control" min="0" name="maxPrice">
             </div>
           </div>
 
@@ -81,7 +81,7 @@
           <thead>
             <th>Name</th>
             <th>Service Type</th>
-            <th>Max Price (SGD)</th>
+            <th>Max Salary (SGD)</th>
             <th>Start date</th>
             <th>End date</th>
             <th>Pet Name</th>
@@ -97,7 +97,7 @@
               <td><%= row.dateend.toLocaleDateString() %></td>
               <td><%= row.petname %></td>
               <% if (user.isCareTaker) { %>
-              <td><button class="btn-primary" data-sid="<%= row.sid %>">Request</button></td>
+              <td><button class="btn-primary" data-srid="<%= row.srid %>">Accept</button></td>
               <% } %>
             </tr>
             <% } %>
@@ -122,23 +122,28 @@
 </template>
 
 <script src="/js/toast.js"></script>
+
 <script>
-  (function () {
-    const trs = document.querySelectorAll('tbody > tr');
-    for (const tr of trs) {
-      const btn = tr.querySelector('button');
-      btn.addEventListener('click', async (e) => {
-        const res = await fetch('/api/requests/request?srid=' + btn.dataset.srid);
-        const json = await res.json();
-        if (json.success) {
-          btn.disabled = true;
-          createSuccessToast('Success!').show();
-        } else {
-          createErrorToast(json.error).show();
+    (function () {
+        const trs = document.querySelectorAll('tbody > tr');
+        for (const tr of trs) {
+            const btn = tr.querySelector('button');
+            btn.addEventListener('click', async (e) => {
+                console.log("b:"+btn.dataset.srid);
+                const res = await fetch('/api/requests/accept?srid=' + btn.dataset.srid);
+                const json = await res.json();
+                if (json.success) {
+                    btn.disabled = true;
+                    createSuccessToast('Success!').toast('show');
+                    res.redirect('/requests');
+                } else {
+                    createErrorToast(json.error).toast('show');
+                }
+            });
         }
-      });
-    }
-  })();
+
+    })();
 </script>
+
 
 <%- include('footer'); -%>
