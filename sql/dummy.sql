@@ -18,8 +18,16 @@ SELECT aid, 2, 5, '2019-05-03', '2019-05-03' FROM Account WHERE name = 'Alex';
 INSERT INTO Service (aid, serviceType, price, dateStart, dateEnd)
 SELECT aid, 2, 6, '2019-05-04', '2019-05-07' FROM Account WHERE name = 'Alex';
 
-INSERT INTO Pet VALUES(2, 'Max', 30, '2019-01-02', 1, 'Dog that loves fun');
+INSERT INTO Pet VALUES(2, 'Max', 39, '2015-01-02', 3, 'Dog that loves fun');
 INSERT INTO PetMedicalCondition VALUES(2, 'Max', 1);
-INSERT INTO PetMedicalCondition VALUES(2, 'Max', 2);
-INSERT INTO Pet VALUES(2, 'Mocha', 20, '2019-03-01', 3, NULL);
+INSERT INTO PetMedicalCondition VALUES(2, 'Max', 3);
+INSERT INTO Pet VALUES(2, 'Mocha', 22, '2003-03-01', 24, NULL);
 INSERT INTO PetMedicalCondition VALUES(2, 'Mocha', 10);
+INSERT INTO Pet VALUES(2, 'Simba', 17, '2018-12-11', 22, 'Temperamental');
+INSERT INTO PetMedicalCondition VALUES(2, 'Simba', 10);
+INSERT INTO Pet VALUES(2, 'Leo', 48, '2009-09-19', 21, 'Not fond of strangers');
+INSERT INTO PetMedicalCondition VALUES(2, 'Leo', 8);
+INSERT INTO Pet VALUES(2, 'Oliver', 25, '2002-07-023', 5, NULL);
+INSERT INTO PetMedicalCondition VALUES(2, 'Oliver', 3);
+INSERT INTO PetMedicalCondition VALUES(2, 'Oliver', 6);
+INSERT INTO PetMedicalCondition VALUES(2, 'Oliver', 9);
