@@ -1,0 +1,42 @@
+<%- include('header', {title: 'Advertised Requests'}); -%>
+
+<main class="container">
+    <h2>Your advertised requests</h2>
+    <% if (results.length == 0) { %>
+    <div class="">No result found.</div>
+    <% } else { %>
+    <div class="table-responsive">
+      <table class="table-striped">
+        <thead>
+          <th>Name</th>
+          <th>Service Type</th>
+          <th>Max Price (SGD)</th>
+          <th>Start date</th>
+          <th>End date</th>
+        </thead>
+        <tbody>
+          <% for (const row of results) { %>
+          <tr>
+            <td><%= row.name %></td>
+            <td><%= serviceTypes[row.servicetype - 1].name %></td>
+            <td><%= row.maxprice %></td>
+            <td><%= row.datestart.toLocaleDateString() %></td>
+            <td><%= row.dateend.toLocaleDateString() %></td>
+            <td>
+              <form action="/advertiseRequest/deleteRequest" method="POST">
+                <button type="submit" class="btn btn-danger" name="delete" value="<%= row.srid %>">
+                  Delete
+                </button>
+              </form>
+            </td>
+          </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+    <% } %>
+
+
+
+</main>
+<%- include('footer'); -%>
