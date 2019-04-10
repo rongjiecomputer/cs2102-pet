@@ -292,15 +292,15 @@ module.exports = (app, passport) => {
       }
     }
 
-    if (checkNotEmpty(req.query.priceCompare) && checkNotEmpty(req.query.price)) {
-      let x = Number.parseInt(req.query.price);
+    if (checkNotEmpty(req.query.priceCompare) && checkNotEmpty(req.query.maxPrice)) {
+      let x = Number.parseInt(req.query.maxPrice);
       let op = '=';
       switch (req.query.priceCompare) {
         case 'eq': op = '='; break;
         case 'lt': op = '<'; break;
         case 'gt': op = '>'; break;
       }
-      where_clauses.push(`S.price ${op} $${next_placeholder_id++}`);
+      where_clauses.push(`S.maxPrice ${op} $${next_placeholder_id++}`);
       objs.push(x);
     }
 
@@ -336,8 +336,6 @@ module.exports = (app, passport) => {
       }
     }
 
-
-
     const client = await db.connect();
     try {
       console.log(query_s);
@@ -361,7 +359,7 @@ module.exports = (app, passport) => {
         throw Error('Current user is not a care taker');
       }
 
-      const data = await client.query('UPDATE Service SET acceptedBy = $1 WHERE srid = $2 RETURNING *', [careTaker.aid, srid]);
+      const data = await client.query('UPDATE ServiceRequest SET acceptedBy = $1 WHERE srid = $2 RETURNING *', [careTaker.aid, srid]);
       if (data.rowCount == 0) {
         throw Error('Invalid srid');
       }
