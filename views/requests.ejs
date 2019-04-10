@@ -1,4 +1,4 @@
-<%- include('header', {title: 'Services'}); -%>
+<%- include('header', {title: 'Requests'}); -%>
 
 <div class="container-fluid vertical-stretch">
   <div class="row vertical-stretch">
@@ -6,7 +6,7 @@
     <nav class="col-md-4 d-md-block bg-primary text-white vertical-stretch">
       <div class="px-2 py-3">
 
-        <form action="/service" method="GET">
+        <form action="/requests" method="GET">
           <h3>Filter</h3>
 
           <div class="form-group">
@@ -72,7 +72,7 @@
     </nav>
 
     <main class="col-md-8 px-4">
-      <h2>Available services</h2>
+      <h2>Available Requests</h2>
       <% if (results.length == 0) { %>
       <div class="">No result found.</div>
       <% } else { %>
@@ -95,7 +95,7 @@
               <td><%= row.price %></td>
               <td><%= row.datestart.toLocaleDateString() %></td>
               <td><%= row.dateend.toLocaleDateString() %></td>
-              <td><%= row.petName() %></td>
+              <td><%= row.petname %></td>
               <% if (user.isCareTaker) { %>
               <td><button class="btn-primary" data-sid="<%= row.sid %>">Request</button></td>
               <% } %>
