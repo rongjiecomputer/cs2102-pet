@@ -5,9 +5,11 @@ async function setEmail(id, email) {
   try{
     await db.query('UPDATE Account SET email = $1 WHERE aid = $2',  [email, id]);
     console.log("Email update success!");
+    return true;
   }
   catch (err){
     console.log(err);
+    return false;
   }
 }
 
@@ -15,9 +17,11 @@ async function setPhone(id, phone) {
   try{
     await db.query('UPDATE Account SET phone = $1 WHERE aid = $2',  [phone, id]);
     console.log('Phone update success!');
+    return true;
   }
   catch (err){
     console.log(err);
+    return false;
   }
 }
 
@@ -36,9 +40,11 @@ async function setPassword(id, password) {
     const newHash = bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
     await db.query('UPDATE Account SET hash = $1 WHERE aid = $2',  [newHash, id]);
     console.log('Password update success!');
+    return true;
   }
   catch (err){
     console.log(err);
+    return false;
   }
 }
 

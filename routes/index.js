@@ -114,28 +114,46 @@ module.exports = (app, passport) => {
 
   // Edit Page (Start)
   app.get('/profile/edit', isLoggedIn, (req, res) => {
-    res.render('edit', {message: req.flash('editProfileMessage')});
+    res.render('edit', {message: req.flash('info')});
   });
 
   app.post('/edit/password', async (req, res) => {
     const isSame = await edit.checkPassword(req.user.aid, req.body.oldPwd, req.user.hash);
     if (isSame) {
-      await edit.setPassword(req.user.aid, req.body.newPwd, req.user.hash);
-      res.redirect('/profile');
+      const success = await edit.setPassword(req.user.aid, req.body.newPwd, req.user.hash);
+      if (success){
+        req.flash('info', 'Edit password success!');
+      }
+      else{
+        req.flash('info', 'Edit password fail!');
+      }
+      res.redirect('/profile/edit');
     } else {
-      console.log('Comparison fail!');
+      req.flash('info', 'Old password is not the same!');
       res.redirect('/profile/edit');
     }
   });
 
   app.post('/edit/email', async (req, res) => {
-    await edit.setEmail(req.user.aid, req.body.newEmail);
-    res.redirect('/profile');
+    const success = await edit.setEmail(req.user.aid, req.body.newEmail);
+    if (success){
+      req.flash('info', 'Edit email success!');
+    }
+    else{
+      req.flash('info', 'Edit email fail!');
+    }
+    res.redirect('/profile/edit');
   });
 
   app.post('/edit/phone', async (req, res) => {
-    await edit.setPhone(req.user.aid, req.body.newPhone);
-    res.redirect('/profile');
+    const success = await edit.setPhone(req.user.aid, req.body.newPhone);
+    if (success){
+      req.flash('info', 'Edit phone success!');
+    }
+    else{
+      req.flash('info', 'Edit phone fail!');
+    }
+    res.redirect('/profile/edit');
   });
   // Edit Page (End)
 
@@ -150,7 +168,6 @@ module.exports = (app, passport) => {
     const petMC = await pets.getPetMC();
     console.log('Get pets medical condition success!');
     res.render('pets', { displayedUser: req.user, pets: petsData, breeds, mc, petMC });
-
   });
 
   app.post('/pets/add', async (req, res) => {
@@ -371,6 +388,7 @@ module.exports = (app, passport) => {
       } catch (e) {
           res.status(200).send({ success: false, error: e.message });
       }
+
   });
 
 
