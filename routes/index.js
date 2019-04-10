@@ -114,7 +114,7 @@ module.exports = (app, passport) => {
 
   // Edit Page (Start)
   app.get('/profile/edit', isLoggedIn, (req, res) => {
-    res.render('edit', {message: req.flash('info')});
+    res.render('edit', {success: req.flash('success'), failure: req.flash('failure')});
   });
 
   app.post('/edit/password', async (req, res) => {
@@ -122,14 +122,14 @@ module.exports = (app, passport) => {
     if (isSame) {
       const success = await edit.setPassword(req.user.aid, req.body.newPwd, req.user.hash);
       if (success){
-        req.flash('info', 'Edit password success!');
+        req.flash('success', 'Edit password success!');
       }
       else{
-        req.flash('info', 'Edit password fail!');
+        req.flash('failure', 'Edit password fail!');
       }
       res.redirect('/profile/edit');
     } else {
-      req.flash('info', 'Old password is not the same!');
+      req.flash('failure', 'Old password is not the same!');
       res.redirect('/profile/edit');
     }
   });
@@ -137,10 +137,10 @@ module.exports = (app, passport) => {
   app.post('/edit/email', async (req, res) => {
     const success = await edit.setEmail(req.user.aid, req.body.newEmail);
     if (success){
-      req.flash('info', 'Edit email success!');
+      req.flash('success', 'Edit email success!');
     }
     else{
-      req.flash('info', 'Edit email fail!');
+      req.flash('failure', 'Edit email fail!');
     }
     res.redirect('/profile/edit');
   });
@@ -148,10 +148,10 @@ module.exports = (app, passport) => {
   app.post('/edit/phone', async (req, res) => {
     const success = await edit.setPhone(req.user.aid, req.body.newPhone);
     if (success){
-      req.flash('info', 'Edit phone success!');
+      req.flash('success', 'Edit phone success!');
     }
     else{
-      req.flash('info', 'Edit phone fail!');
+      req.flash('failure', 'Edit phone fail!');
     }
     res.redirect('/profile/edit');
   });
@@ -167,22 +167,41 @@ module.exports = (app, passport) => {
     console.log('Get list of medical condition success!');
     const petMC = await pets.getPetMC();
     console.log('Get pets medical condition success!');
-    res.render('pets', { displayedUser: req.user, pets: petsData, breeds, mc, petMC });
+    res.render('pets', { displayedUser: req.user, pets: petsData, breeds, mc, petMC,
+      success: req.flash('success'), failure: req.flash('failure') });
   });
 
   app.post('/pets/add', async (req, res) => {
-    await pets.addPet(req.user.aid, req.body.petName, req.body.petWeight, req.body.petBday, req.body.petBreed,
+    const success = await pets.addPet(req.user.aid, req.body.petName, req.body.petWeight, req.body.petBday, req.body.petBreed,
       req.body.petMC, req.body.petRemarks);
+    if (success){
+      req.flash('success', 'Add pet success!');
+    }
+    else{
+      req.flash('failure', 'Add pet fail!');
+    }
     res.redirect('/profile/pets');
   });
 
   app.post('/pets/edit', async (req, res) => {
-    await pets.editPet(req.user.aid, req.body.petName, req.body.petWeight, req.body.petMC, req.body.petRemarks);
+    const success = await pets.editPet(req.user.aid, req.body.petName, req.body.petWeight, req.body.petMC, req.body.petRemarks);
+    if (success){
+      req.flash('success', 'Edit pet success!');
+    }
+    else{
+      req.flash('failure', 'Edit pet fail!');
+    }
     res.redirect('/profile/pets');
   });
 
   app.post('/pets/delete', async (req, res) => {
-    await pets.deletePet(req.user.aid, req.body.delete);
+    const success = await pets.deletePet(req.user.aid, req.body.delete);
+    if (success){
+      req.flash('success', 'Delete pet success!');
+    }
+    else{
+      req.flash('failure', 'Delete pet fail!');
+    }
     res.redirect('/profile/pets');
   });
   // Pets Page (End)

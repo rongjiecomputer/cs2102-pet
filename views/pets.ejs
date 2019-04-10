@@ -3,7 +3,12 @@ include('header', {title: 'Pets'});
 -%>
 
 <main class="container">
-
+    <% if (success.length > 0) { %>
+        <div class="alert alert-success"><%= success %></div>
+    <% } %>
+    <% if (failure.length > 0) { %>
+        <div class="alert alert-danger"><%= failure %></div>
+    <% } %>
     <% if (displayedUser === null) { %>
         <div class="alert alert-danger">Profile not found.</div>
     <% } else { %>
