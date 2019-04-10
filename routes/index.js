@@ -102,7 +102,7 @@ module.exports = (app, passport) => {
       const data = await client.query(
         `INSERT INTO Service(aid, serviceType, price, dateStart, dateEnd)
         VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-        [careTaker.aid, req.body.serviceType, req.body.price, req.body.dateStart, req.body.dateEnd]);
+        [careTaker.aid,Number.parseInt( req.body.serviceType), Number.parseInt( req.body.price), req.body.dateStart, req.body.dateEnd]);
       if (data.rowCount == 0) {
         throw Error('Failed to create new service request');
       }
