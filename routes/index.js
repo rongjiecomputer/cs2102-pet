@@ -348,18 +348,18 @@ module.exports = (app, passport) => {
   app.get('/api/requests/request', isLoggedIn, async (req, res) => {
     const client = await db.connect();
     try {
-      const petOwner = req.user;
-      const sid = Number.parseInt(req.query.sid);
-      if (!petOwner.isPetOwner) {
-        throw Error('Current user is not a pet owner.');
+      const careTaker = req.user;
+      const srid = Number.parseInt(req.query.srid);
+      if (!careTaker.isCareTaker) {
+        throw Error('Current user is not a care taker');
       }
 
-      const data = await client.query('UPDATE Service SET acceptedBy = $1 WHERE srid = $2 RETURNING *', [petOwner.aid, sid]);
+      const data = await client.query('UPDATE Service SET acceptedBy = $1 WHERE srid = $2 RETURNING *', [careTaker.aid, srid]);
       if (data.rowCount == 0) {
         throw Error('Invalid srid');
       }
-      await client.query(`INSERT INTO PetOwnerRecords(petOwnerID, careTakerID, srid)
-      VALUES ($1, $2, $3)`, [petOwner.aid, data.rows[0].aid, sid]);
+      await client.query(`INSERT INTO CareTakerRecords( careTakerID,petOwnerID, srid)
+      VALUES ($1, $2, $3)`, [careTaker.aid, data.rows[0].aid, srid]);
       res.status(200).send({ success: true });
     } catch (e) {
       res.status(200).send({ success: false, error: e.message });
