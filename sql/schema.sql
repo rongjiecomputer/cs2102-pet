@@ -8,6 +8,7 @@ DROP TABLE IF EXISTS ServiceRequest, Service, ServiceType, Pet,
   MedicalCondition, Breed, PetOwner, CareTaker, Account, Region ,PetMedicalCondition,
    CareTakerRecords,PetOwnerRecords CASCADE;
 
+-- Entities
 CREATE TABLE Region(
   region SERIAL,
   name VARCHAR(30) NOT NULL,
@@ -42,13 +43,13 @@ CREATE TABLE CareTaker(
 
 CREATE TABLE Breed(
   breed SERIAL,
-  name varchar(20) NOT NULL,
+  name VARCHAR(20) NOT NULL,
   PRIMARY KEY(breed)
 );
 
 CREATE TABLE MedicalCondition(
   medicalCondition SERIAL,
-  name varchar(20) NOT NULL,
+  name VARCHAR(20) NOT NULL,
   PRIMARY KEY(medicalCondition)
 );
 
@@ -69,7 +70,7 @@ CREATE TABLE PetMedicalCondition(
   name varchar(50) NOT NULL, --name of pet
   medicalCondition INTEGER NOT NULL,
   PRIMARY KEY(aid,name,medicalCondition),
-  FOREIGN KEY(aid,name) REFERENCES Pet,
+  FOREIGN KEY(aid,name) REFERENCES Pet ON DELETE CASCADE,
   FOREIGN KEY(medicalCondition) REFERENCES MedicalCondition
 );
 
@@ -97,6 +98,7 @@ CREATE TABLE Service(
   CHECK(dateStart <= dateEnd)
 );
 
+-- Relationships
 CREATE TABLE ServiceRequest(
   srid SERIAL,
   aid INTEGER NOT NULL, -- PetOwner

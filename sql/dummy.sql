@@ -82,3 +82,4 @@ INSERT INTO Pet (aid,name,weight,birthday,breed,remark) VALUES
 (7, 'Cat', 20, '2018-03-21',12 , NULL);
 INSERT INTO PetMedicalCondition (aid,name,medicalCondition) VALUES
 (7, 'Cat', 10);
+
