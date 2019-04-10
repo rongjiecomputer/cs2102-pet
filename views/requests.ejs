@@ -97,7 +97,6 @@
               <td><%= row.dateend.toLocaleDateString() %></td>
               <td><%= row.petname %></td>
               <% if (user.isCareTaker) { %>
-              <%console.log('srid = ' + row.srid)%>
               <td><button class="btn-primary" data-srid="<%= row.srid %>">Accept</button></td>
               <% } %>
             </tr>
