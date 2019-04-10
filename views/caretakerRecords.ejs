@@ -7,7 +7,7 @@
     <div class="table-responsive">
         <table class="table-striped">
             <thead>
-            <th>CareTaker Name</th>
+            <th>Pet Owner's Name</th>
             <th>Service Type</th>
             <th>Date Accepted</th>
 
@@ -16,8 +16,8 @@
             <% for (const row of results) { %>
             <tr>
                 <td><%= row.name %></td>
-                <td><%= row.serviceName %></td>
-                <td><%= row.dateAccepted %></td>
+                <td><%= row.servicename %></td>
+                <td><%= row.dateaccepted.toLocaleDateString() %></td>
             </tr>
             <% } %>
             </tbody>
