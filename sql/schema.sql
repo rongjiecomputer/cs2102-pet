@@ -114,7 +114,7 @@ CREATE TABLE ServiceRequest(
   PRIMARY KEY(srid),
   FOREIGN KEY(aid) REFERENCES Account,
   FOREIGN KEY(acceptedBy) REFERENCES Account,
-  FOREIGN KEY(aid, petName) REFERENCES Pet,
+  FOREIGN KEY(aid, petName) REFERENCES Pet ON DELETE CASCADE,
   FOREIGN KEY(serviceType) REFERENCES ServiceType,
   CHECK(dateStart <= dateEnd)
 );
