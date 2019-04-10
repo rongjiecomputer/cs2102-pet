@@ -8,12 +8,12 @@ include('header', {title: 'Pets'});
         <div class="alert alert-danger">Profile not found.</div>
     <% } else { %>
         <!-- Add Pet Modal (Start)-->
-        <!-- Modal Button -->
+        <!-- Add Pet Modal Button -->
         <button type="button" id="addPetBtn" class="btn btn-primary" data-toggle="modal" data-target="#addPetModal">
             Add Pet
         </button>
 
-        <!-- Modal -->
+        <!-- Add Pet Modal Structure -->
         <div class="modal fade" id="addPetModal" tabindex="-1" role="dialog" aria-labelledby="addPetModalLabel"
              aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -30,35 +30,26 @@ include('header', {title: 'Pets'});
                             <input class="form-control" type="text" placeholder="Enter Name" name="petName" required>
 
                             <label class="font-weight-bold"><b>Weight</b></label>
-                            <input class="form-control" type="number" placeholder="Enter Weight" name="petWeight"
-                                   required>
+                            <input class="form-control" type="number" min="1" max="200"
+                                   placeholder="Enter Weight" name="petWeight" required>
 
                             <label class="font-weight-bold"><b>Birthday</b></label>
                             <input class="form-control" type="date" placeholder="Enter Birthday" name="petBday"
                                    required>
 
+
                             <label class="font-weight-bold"><b>Breed</b></label>
                             <select class="form-control" name="petBreed" required>
-                                <%
-                                    let bIndex = 0;
-                                        while(breeds.rows[bIndex]){%>
-                                <option value="<%= bIndex+1 %>"><%= breeds.rows[bIndex].name %></option>
-                                <%
-                                        bIndex++;
-                                }
-                                %>
+                                <% for (const row of breeds) { %>
+                                    <option value="<%= row.breed %>"><%= row.name %></option>
+                                <% } %>
                             </select>
 
                             <label class="font-weight-bold"><b>Medical Condition</b></label>
-                            <select class="form-control" name="petMC" required>
-                                <%
-                                    let mcIndex = 0;
-                                        while(mc.rows[mcIndex]){%>
-                                    <option value="<%= mcIndex+1 %>"><%= mc.rows[mcIndex].name %></option>
-                                <%
-                                    mcIndex++;
-                                }
-                                %>
+                            <select class="form-control" name="petMC" multiple required>
+                                <% for (const row of mc) { %>
+                                    <option value="<%= row.medicalcondition %>"><%= row.name %></option>
+                                <% } %>
                             </select>
 
                             <label class="font-weight-bold"><b>Remarks</b></label>
@@ -74,41 +65,123 @@ include('header', {title: 'Pets'});
             </div>
         </div>
         <!-- Add Pet Modal (End)-->
-            <br>
-            <br>
+        <br>
+        <br>
         <!-- Display Pet (Start)-->
-            <table class="table table-bordered table-hover">
-                <thead class="thead-light">
-                <tr>
-                    <th>#</th>
-                    <th>Name</th>
-                    <th>Weight</th>
-                    <th>Birthday</th>
-                    <th>Breed</th>
-                    <th>Medical Condition</th>
-                    <th>Remark</th>
-                </tr>
-                </thead>
-                <tbody>
+        <table class="table table-borderless table-hover">
+            <thead class="thead-light">
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Weight</th>
+                <th>Birthday</th>
+                <th>Breed</th>
+                <th>Medical Condition</th>
+                <th>Remark</th>
+                <th>Actions</th>
+                <th></th>
+            </tr>
+            </thead>
+
+            <tbody>
+
             <%
                 let index = 0;
-                while(pets.rows[index]){
+                let medIndex;
+                let found;
+                    while(pets.rows[index]){
+                pets.rows[index].medicalcondition = '';
+                found = 0;
+                medIndex = 0;
+                while (petMC.rows[medIndex]) {
+                    if (pets.rows[index].name == petMC.rows[medIndex].name) {
+                        if (found) {
+                            pets.rows[index].medicalcondition += ', '
+                        } else {
+                            found = 1;
+                        }
+                        pets.rows[index].medicalcondition += petMC.rows[medIndex].medicalcondition;
+                    }
+                    medIndex++;
+                }
             %>
-                <tr>
-                    <th scope="row"><%= index+1 %></th>
-                    <td><%= pets.rows[index].name %></td>
-                    <td><%= pets.rows[index].weight %></td>
-                    <td><%= JSON.stringify(pets.rows[index].birthday).slice(1,11) %></td>
-                    <td><%= pets.rows[index].breed %></td>
-                    <td><%= pets.rows[index].medicalcondition %></td>
-                    <td><%= pets.rows[index].remark %></td>
-                </tr>
+            <tr>
+
+
+                <th scope="row"><%= index + 1 %></th>
+                <td><%= pets.rows[index].name %></td>
+                <td><%= pets.rows[index].weight %></td>
+                <td><%= pets.rows[index].birthday.toLocaleDateString() %></td>
+                <td><%= pets.rows[index].breed %></td>
+                <td><%= pets.rows[index].medicalcondition %></td>
+                <td><%= pets.rows[index].remark %></td>
+                <td>
+                    <button type="button" id="editPetBtn" class="btn btn-warning" data-toggle="modal"
+                            data-target="#editPetModal<%= index %>">
+                        Edit
+                    </button>
+                </td>
+                <td>
+                    <form action="/pets/delete" method="POST">
+                        <button type="submit" class="btn btn-danger" name="delete" value="<%= pets.rows[index].name %>">
+                            Delete
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            <!-- Edit Pet Modal -->
+            <div class="modal fade" id="editPetModal<%= index %>" tabindex="-1" role="dialog"
+                 aria-labelledby="editPetModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editPetModalLabel"><%= pets.rows[index].name %></h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form action="/pets/edit" method="POST">
+                            <div class="modal-body">
+                                <input class="form-control" type="text" value=<%= pets.rows[index].name %>
+                                name="petName" hidden required>
+
+                                <label class="font-weight-bold"><b>Weight</b></label>
+                                <input class="form-control" type="number" min="1" max="200"
+                                       placeholder="Enter Weight" value=<%= pets.rows[index].weight %>
+                                       name="petWeight" required>
+
+                                <label class="font-weight-bold"><b>Medical Condition</b></label>
+                                <select class="form-control" name="petMC" multiple required>
+                                    <% for (const row of mc) { %>
+                                        <option value="<%= row.medicalcondition %>"><%= row.name %></option>
+                                    <% } %>
+                                </select>
+
+                                <label class="font-weight-bold"><b>Remarks</b></label>
+                                <input class="form-control" type="text" placeholder="Enter Remarks (Optional)"
+                                       value="<%= pets.rows[index].remark %>" name="petRemarks">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-success">Edit</button>
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
             <%
                 index++;
             } %>
-                </tbody>
-            </table>
+
+            </tbody>
+
+
+        </table>
+
+
         <!-- Display Pet (End)-->
+
     <% } %>
 </main>
 

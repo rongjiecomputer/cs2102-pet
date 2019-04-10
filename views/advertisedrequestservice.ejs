@@ -1,34 +1,32 @@
-<%- include('header', {title: 'AdvertisedRequestService'}); -%>
+<%- include('header', {title: 'Advertised Service Requests'}); -%>
 
-<main class="col-md-8 px-4">
-  <h2>Your advertised requests/services</h2>
+<main class="container">
+  <h2>Your advertised service requests</h2>
   <% if (results.length == 0) { %>
-    <div class="">No result found.</div>
+  <div class="">No result found.</div>
   <% } else { %>
-    <div class="table-responsive">
-      <table class="table-striped">
-        <thead>
+  <div class="table-responsive">
+    <table class="table-striped">
+      <thead>
         <th>Name</th>
         <th>Service Type</th>
-        <th>Price (SGD)</th>
+        <th>Max Price (SGD)</th>
         <th>Start date</th>
         <th>End date</th>
-        </thead>
-        <tbody>
+      </thead>
+      <tbody>
         <% for (const row of results) { %>
-          <tr>
-            <td><%= row.name %></td>
-            <td><%= serviceTypes[row.servicetype - 1].name %></td>
-            <td><%= row.price %></td>
-            <td><%= row.datestart.toLocaleDateString() %></td>
-            <td><%= row.dateend.toLocaleDateString() %></td>
-          </tr>
+        <tr>
+          <td><%= row.name %></td>
+          <td><%= serviceTypes[row.servicetype - 1].name %></td>
+          <td><%= row.maxprice %></td>
+          <td><%= row.datestart.toLocaleDateString() %></td>
+          <td><%= row.dateend.toLocaleDateString() %></td>
+        </tr>
         <% } %>
-        </tbody>
-      </table>
-    </div>
+      </tbody>
+    </table>
+  </div>
   <% } %>
-
 </main>
-
 <%- include('footer'); -%>
