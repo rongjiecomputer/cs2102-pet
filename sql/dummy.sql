@@ -73,7 +73,6 @@ SELECT aid, 4, 5, '2019-12-12', '2019-12-13' FROM Account WHERE name = 'Gerald';
 INSERT INTO Service (aid, serviceType, price, dateStart, dateEnd)
 SELECT aid, 6, 69, '2019-06-06', '2020-04-03' FROM Account WHERE name = 'Gerald';
 
-
 -- Bob's Pets
 INSERT INTO Pet(aid,name,weight,birthday,breed,remark) VALUES
 (2, 'Max', 30, '2019-01-02', 1, 'Dog that loves fun');
@@ -140,3 +139,4 @@ INSERT INTO ServiceRequest (aid,petName, serviceType, maxPrice, dateStart, dateE
 SELECT aid,'Cat' ,7, 1000, '2019-11-22', '2020-11-30' FROM Account WHERE name = 'Gerald';
 INSERT INTO ServiceRequest (aid,petName, serviceType, maxPrice, dateStart, dateEnd)
 SELECT aid,'Cat' ,2, 12, '2019-08-14', '2019-09-01' FROM Account WHERE name = 'Gerald';
+
