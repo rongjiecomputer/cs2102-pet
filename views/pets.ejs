@@ -40,26 +40,16 @@ include('header', {title: 'Pets'});
 
                             <label class="font-weight-bold"><b>Breed</b></label>
                             <select class="form-control" name="petBreed" required>
-                                <%
-                                    let bIndex = 0;
-                                        while(breeds.rows[bIndex]){ %>
-                                    <option value="<%= bIndex + 1 %>"><%= breeds.rows[bIndex].name %></option>
-                                <%
-                                    bIndex++;
-                                }
-                                %>
+                                <% for (const row of breeds) { %>
+                                    <option value="<%= row.breed %>"><%= row.name %></option>
+                                <% } %>
                             </select>
 
                             <label class="font-weight-bold"><b>Medical Condition</b></label>
                             <select class="form-control" name="petMC" multiple required>
-                                <%
-                                    let mcIndex = 0;
-                                        while(mc.rows[mcIndex]){ %>
-                                    <option value="<%= mcIndex + 1 %>"><%= mc.rows[mcIndex].name %></option>
-                                <%
-                                    mcIndex++;
-                                }
-                                %>
+                                <% for (const row of mc) { %>
+                                  <option value="<%= row.medicalcondition %>"><%= row.name %></option>
+                                <% } %>
                             </select>
 
                             <label class="font-weight-bold"><b>Remarks</b></label>

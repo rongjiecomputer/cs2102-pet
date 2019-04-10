@@ -53,10 +53,10 @@
             </button>
           </div>
           <div class="modal-body">
-            <form method="post">
+            <form id="createServiceRequestForm">
               <div class="form-group">
                 <label>Pet</label>
-                <select class="form-control">
+                <select class="form-control" name="petName" required>
                   <% for (const pet of pets) { %>
                   <option value="<%= pet.name %>"><%= pet.name %></option>
                   <% } %>
@@ -64,7 +64,7 @@
               </div>
               <div class="form-group">
                 <label>Service type</label>
-                <select class="form-control" name="serviceType">
+                <select class="form-control" name="serviceType" required>
                   <% for (const row of serviceTypes) { %>
                   <option value="<%= row.servicetype %>"><%= row.name %></option>
                   <% } %>
@@ -72,20 +72,18 @@
               </div>
               <div class="form-group">
                 <label>Maxmimum price you are willing pay (SGD)</label>
-                <input type="number" class="form-control" name="maxPrice" min="0">
+                <input type="number" class="form-control" name="maxPrice" min="0" required>
               </div>
               <div class="form-group">
                 <label>Start Date</label>
-                <input class="form-control" type="date" name="dateStart">
+                <input class="form-control" type="date" name="dateStart" required>
               </div>
               <div class="form-group">
                 <label>End Date</label>
-                <input class="form-control" type="date" name="dateEnd">
+                <input class="form-control" type="date" name="dateEnd" required>
               </div>
+              <input type="submit" class="btn btn-primary" value="Submit request">
             </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary">Submit request</button>
           </div>
         </div>
       </div>
@@ -122,10 +120,10 @@
             </button>
           </div>
           <div class="modal-body">
-            <form>
+            <form id="createServiceForm">
               <div class="form-group">
                 <label>Service type</label>
-                <select class="form-control" name="serviceType">
+                <select class="form-control" name="serviceType" required>
                   <% for (const row of serviceTypes) { %>
                   <option value="<%= row.servicetype %>"><%= row.name %></option>
                   <% } %>
@@ -133,20 +131,18 @@
               </div>
               <div class="form-group">
                 <label>Price (SGD)</label>
-                <input type="number" class="form-control" name="price" min="0">
+                <input type="number" class="form-control" name="price" min="0" required>
               </div>
               <div class="form-group">
                 <label>Start Date</label>
-                <input class="form-control" type="date" name="dateStart">
+                <input class="form-control" type="date" name="dateStart" required>
               </div>
               <div class="form-group">
                 <label>End Date</label>
-                <input class="form-control" type="date" name="dateEnd">
+                <input class="form-control" type="date" name="dateEnd" required>
               </div>
+              <input type="submit" class="btn btn-primary" value="Submit service">
             </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary">Advertise Service!</button>
           </div>
         </div>
       </div>
@@ -170,5 +166,50 @@
   <% } %>
 
 </main>
+
+<div id="toast-center"></div>
+
+<template id="toast-tpl">
+  <div class="toast-body">
+    <span class="toast-msg"></span>
+    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+      <span aria-hidden="true">×</span>
+    </button>
+  </div>
+</template>
+
+<script src="/js/toast.js"></script>
+<script>
+  (function () {
+    document.querySelector('#createServiceRequestForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const res = await fetch('/api/requests/create', {
+        method: "POST",
+        body: formData,
+      });
+      const json = await res.json();
+      if (json.success) {
+        createSuccessToast('Success!').toast('show');
+      } else {
+        createErrorToast(json.error).toast('show');
+      }
+    });
+    document.querySelector('#createServiceForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const res = await fetch('/api/service/create', {
+        method: "POST",
+        body: formData,
+      });
+      const json = await res.json();
+      if (json.success) {
+        createSuccessToast('Success!').toast('show');
+      } else {
+        createErrorToast(json.error).toast('show');
+      }
+    });
+  })();
+</script>
 
 <%- include('footer'); -%>

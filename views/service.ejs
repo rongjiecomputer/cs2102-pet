@@ -80,7 +80,7 @@
       <div class="table-responsive">
         <table class="table-striped">
           <thead>
-            <th>Name</th>
+            <th>Care Taker's Name</th>
             <th>Service Type</th>
             <th>Price (SGD)</th>
             <th>Start date</th>
@@ -96,7 +96,7 @@
               <td><%= row.datestart.toLocaleDateString() %></td>
               <td><%= row.dateend.toLocaleDateString() %></td>
               <% if (user.isPetOwner) { %>
-              <td><button class="btn-primary" data-srid="<%= row.srid %>">Request</button></td>
+              <td><button class="btn-primary" data-sid="<%= row.sid %>">Request</button></td>
               <% } %>
             </tr>
             <% } %>
@@ -127,13 +127,13 @@
     for (const tr of trs) {
       const btn = tr.querySelector('button');
       btn.addEventListener('click', async (e) => {
-        const res = await fetch('/api/service/request?srid=' + btn.dataset.srid);
+        const res = await fetch('/api/service/request?sid=' + btn.dataset.sid);
         const json = await res.json();
         if (json.success) {
           btn.disabled = true;
-          createSuccessToast('Success!').show();
+          createSuccessToast('Success!').toast('show');
         } else {
-          createErrorToast(json.error).show();
+          createErrorToast(json.error).toast('show');
         }
       });
     }
