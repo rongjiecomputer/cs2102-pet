@@ -60,9 +60,10 @@
           <h3>Sort by</h3>
 
           <div class="form-group">
+            <label>Payout</label>
             <select class="form-control" name="sort">
-              <option value="lowPrice">Lowest price first</option>
-              <option value="highPrice">Highest price first</option>
+              <option value="lowPrice">Lowest paying first</option>
+              <option value="highPrice">Highest paying first</option>
             </select>
           </div>
 
@@ -85,7 +86,7 @@
             <th>Start date</th>
             <th>End date</th>
             <th>Pet Name</th>
-            <% if (user.isPetOwner) { %><th>Action</th><% } %>
+            <% if (user.isCareTaker) { %><th>Action</th><% } %>
           </thead>
           <tbody>
             <% for (const row of results) { %>
@@ -95,8 +96,8 @@
               <td><%= row.price %></td>
               <td><%= row.datestart.toLocaleDateString() %></td>
               <td><%= row.dateend.toLocaleDateString() %></td>
-              <td><%= row.petName() %></td>
-              <% if (user.isPetOwner) { %>
+              <td><%= row.petname %></td>
+              <% if (user.isCareTaker)) { %>
               <td><button class="btn-primary" data-sid="<%= row.sid %>">Request</button></td>
               <% } %>
             </tr>
