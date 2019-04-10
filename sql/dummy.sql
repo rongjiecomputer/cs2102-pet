@@ -32,7 +32,8 @@ INSERT INTO Account(name, email, hash, phone, address1, address2, region, postal
 INSERT INTO CareTaker(aid) SELECT aid FROM Account WHERE name = 'Alex'; -- ID:1
 INSERT INTO CareTaker(aid) SELECT aid FROM Account WHERE name = 'Charlie'; -- ID:3
 INSERT INTO CareTaker(aid) SELECT aid FROM Account WHERE name = 'Elsa';  -- ID:5
-INSERT INTO CareTaker(aid) SELECT aid FROM Account WHERE name = 'Gerald'; -- ID:6
+INSERT INTO CareTaker(aid) SELECT aid FROM Account WHERE name = 'Frank'; -- ID:6
+
 INSERT INTO PetOwner(aid) SELECT aid FROM Account WHERE name = 'Bob'; -- ID:2
 INSERT INTO PetOwner(aid) SELECT aid FROM Account WHERE name = 'Dave'; -- ID:4
 INSERT INTO PetOwner(aid) SELECT aid FROM Account WHERE name = 'Gerald'; -- ID:7
@@ -64,14 +65,14 @@ SELECT aid, 3, 44, '2019-07-03', '2019-07-12' FROM Account WHERE name = 'Elsa';
 INSERT INTO Service (aid, serviceType, price, dateStart, dateEnd)
 SELECT aid, 7, 12, '2019-12-04', '2019-12-04' FROM Account WHERE name = 'Elsa';
 
--- Services advertised by Gerald
+-- Services advertised by Frank
 
 INSERT INTO Service (aid, serviceType, price, dateStart, dateEnd)
-SELECT aid, 3, 35, '2019-11-11', '2019-11-12' FROM Account WHERE name = 'Gerald';
+SELECT aid, 3, 35, '2019-11-11', '2019-11-12' FROM Account WHERE name = 'Frank';
 INSERT INTO Service (aid, serviceType, price, dateStart, dateEnd)
-SELECT aid, 4, 5, '2019-12-12', '2019-12-13' FROM Account WHERE name = 'Gerald';
+SELECT aid, 4, 5, '2019-12-12', '2019-12-13' FROM Account WHERE name = 'Frank';
 INSERT INTO Service (aid, serviceType, price, dateStart, dateEnd)
-SELECT aid, 6, 69, '2019-06-06', '2020-04-03' FROM Account WHERE name = 'Gerald';
+SELECT aid, 6, 69, '2019-06-06', '2020-04-03' FROM Account WHERE name = 'Frank';
 
 
 -- Bob's Pets

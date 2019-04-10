@@ -170,6 +170,7 @@ module.exports = (app, passport) => {
   });
   // Pets Page (End)
 
+
   app.get('/profile/:aid(\\d+)', isLoggedIn, async (req, res) => {
     res.render('profile', await profile.getTplObjectForProfile(req.params.aid));
   });
@@ -227,6 +228,8 @@ module.exports = (app, passport) => {
       query_s += where_clauses.join(' AND ');
     }
 
+    query_s += ' GROUP BY S.sid, S.aid, A.name, S.serviceType';
+
     if (checkNotEmpty(req.query.sort)) {
       if (req.query.sort === 'highPrice') {
         query_s += ' ORDER BY S.price DESC';
@@ -235,7 +238,7 @@ module.exports = (app, passport) => {
       }
     }
 
-    query_s += ' GROUP BY S.sid, S.aid, A.name, S.serviceType';
+
 
     const client = await db.connect();
     try {
@@ -323,19 +326,23 @@ module.exports = (app, passport) => {
       query_s += where_clauses.join(' AND ');
     }
 
+    query_s += ' GROUP BY S.srid, S.aid, A.name, S.serviceType';
+
     if (checkNotEmpty(req.query.sort)) {
       if (req.query.sort === 'highPrice') {
-        query_s += ' ORDER BY S.price DESC';
+        query_s += ' ORDER BY S.maxPrice DESC';
       } else {
-        query_s += ' ORDER BY S.price';
+        query_s += ' ORDER BY S.maxPrice';
       }
     }
 
-    query_s += ' GROUP BY S.srid, S.aid, A.name, S.serviceType';
+
 
     const client = await db.connect();
     try {
+      console.log(query_s);
       const results = (await client.query(query_s, objs)).rows;
+
       const regions = await Cache.getRows(Cache.REGION);
       const serviceTypes = await Cache.getRows(Cache.SERVICE_TYPE);
 
@@ -368,18 +375,51 @@ module.exports = (app, passport) => {
     }
   });
 
-  app.get('/advertisedrequestservice', isLoggedIn, async (req, res) => {
+  app.get('/advertisedRequest', isLoggedIn, async (req, res) => {
     let query_ad = `SELECT S.*, A.name FROM ServiceRequest S JOIN Account A ON S.aid = A.aid WHERE ${req.user.aid} = A.aid`;
 
     const client = await db.connect();
     try {
       const results = (await client.query(query_ad)).rows;
       const serviceTypes = await Cache.getRows(Cache.SERVICE_TYPE);
-      res.render('advertisedrequestservice', { results, serviceTypes });
+      res.render('advertisedRequest', { results, serviceTypes });
     } finally {
       client.release();
     }
   });
+
+    app.post('/advertiseRequest/deleteRequest', async (req, res) => {
+        try {
+            await db.query('DELETE FROM ServiceRequest WHERE srid =' + req.body.delete );
+            console.log('Delete success!');
+        } catch (err) {
+            console.log('DELETE FROM ServiceRequest WHERE srid =' + req.body.delete + 'FAIL');
+        }
+        res.redirect('/advertisedRequest');
+    });
+
+    app.get('/advertisedService', isLoggedIn, async (req, res) => {
+    let query_ad = `SELECT S.*, A.name FROM Service S JOIN Account A ON S.aid = A.aid WHERE ${req.user.aid} = A.aid`;
+
+    const client = await db.connect();
+    try {
+      const results = (await client.query(query_ad)).rows;
+      const serviceTypes = await Cache.getRows(Cache.SERVICE_TYPE);
+      res.render('advertisedService', { results, serviceTypes });
+    } finally {
+      client.release();
+    }
+  });
+
+    app.post('/advertiseService/deleteService', async (req, res) => {
+        try {
+            await db.query('DELETE FROM Service WHERE sid =' + req.body.delete );
+            console.log('Delete success!');
+        } catch (err) {
+            console.log('DELETE FROM Service WHERE sid =' + req.body.delete + 'FAIL');
+        }
+        res.redirect('/advertisedService');
+    });
 
   app.get('/caretakerRecords', isLoggedIn, async (req, res) => {
 
