@@ -367,28 +367,30 @@ module.exports = (app, passport) => {
     }
   });
 
-  app.get('/api/requests/request', isLoggedIn, async (req, res) => {
-    const client = await db.connect();
-    try {
-      const careTaker = req.user;
-      const srid = Number.parseInt(req.query.srid);
-      if (!careTaker.isCareTaker) {
-        throw Error('Current user is not a care taker');
+  app.get('/api/requests/accept', isLoggedIn, async (req, res) => {
+      try {
+          const careTaker = req.user;
+          const srid = Number.parseInt(req.query.srid);
+          if (!careTaker.isCareTaker) {
+              throw Error('Current user is not a pet owner.');
+          }
+          const client = await db.connect();
+          console.log(careTaker.aid);
+          console.log(srid);
+
+          const data = await client.query('UPDATE ServiceRequest SET acceptedBy = $1 WHERE srid = $2 RETURNING *', [careTaker.aid, srid]);
+          if (data.rowCount == 0) {
+              throw Error('Invalid srid');
+          }
+          await client.query(`INSERT INTO CareTakerRecords(petOwnerID, careTakerID, srid)
+    VALUES ($1, $2, $3)`, [data.rows[0].aid , careTaker.aid , srid]);
+          res.status(200).send({ success: true });
+      } catch (e) {
+          res.status(200).send({ success: false, error: e.message });
       }
 
-      const data = await client.query('UPDATE ServiceRequest SET acceptedBy = $1 WHERE srid = $2 RETURNING *', [careTaker.aid, srid]);
-      if (data.rowCount == 0) {
-        throw Error('Invalid srid');
-      }
-      await client.query(`INSERT INTO CareTakerRecords( careTakerID,petOwnerID, srid)
-      VALUES ($1, $2, $3)`, [careTaker.aid, data.rows[0].aid, srid]);
-      res.status(200).send({ success: true });
-    } catch (e) {
-      res.status(200).send({ success: false, error: e.message });
-    } finally {
-      client.release();
-    }
   });
+
 
   app.get('/advertisedRequest', isLoggedIn, async (req, res) => {
     let query_ad = `SELECT S.*, A.name FROM ServiceRequest S JOIN Account A ON S.aid = A.aid WHERE ${req.user.aid} = A.aid`;
