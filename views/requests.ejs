@@ -85,7 +85,7 @@
             <th>Start date</th>
             <th>End date</th>
             <th>Pet Name</th>
-            <% if (user.isPetOwner) { %><th>Action</th><% } %>
+            <% if (user.isCareTaker) { %><th>Action</th><% } %>
           </thead>
           <tbody>
             <% for (const row of results) { %>
@@ -96,7 +96,7 @@
               <td><%= row.datestart.toLocaleDateString() %></td>
               <td><%= row.dateend.toLocaleDateString() %></td>
               <td><%= row.petName() %></td>
-              <% if (user.isPetOwner) { %>
+              <% if (user.isCareTaker) { %>
               <td><button class="btn-primary" data-sid="<%= row.sid %>">Request</button></td>
               <% } %>
             </tr>
