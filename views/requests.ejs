@@ -135,7 +135,6 @@
                 if (json.success) {
                     btn.disabled = true;
                     createSuccessToast('Success!').toast('show');
-                    res.redirect('/requests');
                 } else {
                     createErrorToast(json.error).toast('show');
                 }
