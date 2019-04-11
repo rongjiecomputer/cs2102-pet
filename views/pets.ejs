@@ -12,12 +12,13 @@ include('header', {title: 'Pets'});
     <% if (displayedUser === null) { %>
         <div class="alert alert-danger">Profile not found.</div>
     <% } else { %>
+        <h2>Your Pets</h2>
         <!-- Add Pet Modal (Start)-->
+
         <!-- Add Pet Modal Button -->
         <button type="button" id="addPetBtn" class="btn btn-primary" data-toggle="modal" data-target="#addPetModal">
             Add a new pet
         </button>
-            <h2>Your Pets</h2>
         <!-- Add Pet Modal Structure -->
         <div class="modal fade" id="addPetModal" tabindex="-1" role="dialog" aria-labelledby="addPetModalLabel"
              aria-hidden="true">
