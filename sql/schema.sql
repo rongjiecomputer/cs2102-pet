@@ -310,8 +310,6 @@ INSERT INTO Breed (name) VALUES ('Bengal Cat');
 INSERT INTO Breed (name) VALUES ('Birman');
 INSERT INTO Breed (name) VALUES ('a Bird');
 
-
-INSERT INTO MedicalCondition VALUES (0, 'None');
 INSERT INTO MedicalCondition (name) VALUES ('Arthritis');
 INSERT INTO MedicalCondition (name) VALUES ('Cancer');
 INSERT INTO MedicalCondition (name) VALUES ('Dental Disease');

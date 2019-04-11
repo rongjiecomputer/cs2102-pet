@@ -84,8 +84,6 @@ INSERT INTO PetMedicalCondition (aid,name,medicalCondition) VALUES
 
 INSERT INTO Pet (aid,name,weight,birthday,breed,remark) VALUES
 (2, 'Mocha', 20, '2019-03-01', 3, NULL);
-INSERT INTO PetMedicalCondition (aid,name,medicalCondition) VALUES
-(2, 'Mocha', 0);
 
 INSERT INTO Pet (aid,name,weight,birthday,breed,remark) VALUES
 (2, 'Michael', 50, '1996-03-01', 12, NULL);
@@ -133,8 +131,6 @@ INSERT INTO PetMedicalCondition (aid,name,medicalCondition) VALUES
 
 INSERT INTO Pet (aid,name,weight,birthday,breed,remark) VALUES
 (7, 'Cat', 20, '2018-03-21',12 , NULL);
-INSERT INTO PetMedicalCondition (aid,name,medicalCondition) VALUES
-(7, 'Cat', 0);
 
 -- Gerald's Requests
 INSERT INTO ServiceRequest (aid,petName, serviceType, maxPrice, dateStart, dateEnd)

@@ -55,6 +55,16 @@
             </div>
           </div>
 
+          <div class="form-group">
+            <label>Exclude pet with medical condition</label>
+            <select class="form-control" name="excludeMC">
+              <option value="-1">None</option>
+              <% for (const row of mc) { %>
+              <option value="<%= row.medicalcondition %>"><%= row.name %></option>
+              <% } %>
+            </select>
+          </div>
+
           <hr>
 
           <h3>Sort by</h3>
@@ -126,25 +136,24 @@
 <script src="/js/toast.js"></script>
 
 <script>
-    (function () {
-        const trs = document.querySelectorAll('tbody > tr');
-        for (const tr of trs) {
-            const btn = tr.querySelector('button');
-            btn.addEventListener('click', async (e) => {
-                console.log("b:"+btn.dataset.srid);
-                const res = await fetch('/api/requests/accept?srid=' + btn.dataset.srid);
-                const json = await res.json();
-                if (json.success) {
-                    btn.disabled = true;
-                    btn.textContent = "Accepted";
-                    createSuccessToast('Success!').toast('show');
-                } else {
-                    createErrorToast(json.error).toast('show');
-                }
-            });
+  (function () {
+    const trs = document.querySelectorAll('tbody > tr');
+    for (const tr of trs) {
+      const btn = tr.querySelector('button');
+      btn.addEventListener('click', async (e) => {
+        console.log("b:" + btn.dataset.srid);
+        const res = await fetch('/api/requests/accept?srid=' + btn.dataset.srid);
+        const json = await res.json();
+        if (json.success) {
+          btn.disabled = true;
+          btn.textContent = "Accepted";
+          createSuccessToast('Success!').toast('show');
+        } else {
+          createErrorToast(json.error).toast('show');
         }
-
-    })();
+      });
+    }
+  })();
 </script>
 
 <%- include('footer'); -%>

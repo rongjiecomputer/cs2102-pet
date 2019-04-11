@@ -51,13 +51,10 @@ include('header', {title: 'Pets'});
                             </select>
 
                             <label class="font-weight-bold"><b>Medical Condition</b></label>
-                            <select class="form-control" name="petMC" multiple required>
-                                <% for (const row of mc) {
-                                    if (row.medicalcondition == 0){ %>
-                                    <option selected="selected" hidden value="<%= row.medicalcondition %>"><%= row.name %></option>
-                                    <%}else{%>
+                            <select class="form-control" name="petMC" multiple>
+                                <% for (const row of mc) { %>
                                     <option value="<%= row.medicalcondition %>"><%= row.name %></option>
-                                <% } }%>
+                                <% } %>
                             </select>
 
                             <label class="font-weight-bold"><b>Remarks</b></label>
@@ -160,13 +157,10 @@ include('header', {title: 'Pets'});
                                        name="petWeight" required>
 
                                 <label class="font-weight-bold"><b>Medical Condition</b></label>
-                                <select class="form-control" name="petMC" multiple required>
-                                    <% for (const row of mc) {
-                                    if (row.medicalcondition == 0){ %>
-                                        <option selected="selected" hidden value="<%= row.medicalcondition %>"><%= row.name %></option>
-                                    <%}else{%>
+                                <select class="form-control" name="petMC" multiple>
+                                    <% for (const row of mc) { %>
                                         <option value="<%= row.medicalcondition %>"><%= row.name %></option>
-                                    <% } }%>
+                                    <% } %>
                                 </select>
 
                                 <label class="font-weight-bold"><b>Remarks</b></label>
