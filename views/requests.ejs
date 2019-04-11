@@ -97,15 +97,7 @@
               <td><%= row.dateend.toLocaleDateString() %></td>
               <td><%= row.petname %></td>
               <% if (user.isCareTaker) { %>
-              <td>
-                <button class="btn-primary" id="<%= row.srid %>" value data-srid="<%= row.srid %>" onclick="click1()">Accept</button>
-                  <script> function click1() {
-                      var el = document.getElementById('<%= row.srid %>');
-                      if (el.textContent === "Accept") {
-                          el.textContent = "Accepted";
-                      }
-                  }</script>
-              </td>
+              <td><button class="btn-primary" data-srid="<%= row.srid %>">Accept</button></td>
               <% } %>
             </tr>
             <% } %>
