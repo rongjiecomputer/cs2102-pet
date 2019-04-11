@@ -87,6 +87,11 @@ INSERT INTO Pet (aid,name,weight,birthday,breed,remark) VALUES
 INSERT INTO PetMedicalCondition (aid,name,medicalCondition) VALUES
 (2, 'Mocha', 0);
 
+INSERT INTO Pet (aid,name,weight,birthday,breed,remark) VALUES
+(2, 'Michael', 50, '1996-03-01', 12, NULL);
+INSERT INTO PetMedicalCondition (aid,name,medicalCondition) VALUES
+(2, 'Michael', 8);
+
 -- Bob's Requests
 INSERT INTO ServiceRequest (aid,petName, serviceType, maxPrice, dateStart, dateEnd)
 SELECT aid,'Max' ,2, 12, '2019-04-22', '2019-04-30' FROM Account WHERE name = 'Bob';
