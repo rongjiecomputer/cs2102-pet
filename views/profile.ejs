@@ -88,15 +88,14 @@
         </div>
       </div>
     </div>
-
-    <p>
-      <a role="button" class="btn btn-success" href="/profile/pets">Manage pets</a>
-    </p>
     <p>
       <a role="button" class="btn btn-danger" href="/service">Search services</a>
       <a role="button" class="btn btn-danger" href="/petownerRecords">See previous accepted services</a>
     </p>
 
+    <p>
+      <a role="button" class="btn btn-success" href="/profile/pets">Manage pets</a>
+    <p>
     <% } else { %>
     <!-- if caretaker -->
 
@@ -216,6 +215,25 @@
       });
     }
   })();
+</script>
+
+<script>
+    (function () {
+        document.querySelector('#createServiceForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const res = await fetch('/api/service/create', {
+                method: "POST",
+                body: formData,
+            });
+            const json = await res.json();
+            if (json.success) {
+                createSuccessToast('Success!').toast('show');
+            } else {
+                createErrorToast(json.error).toast('show');
+            }
+        });
+    })();
 </script>
 
 <%- include('footer'); -%>
