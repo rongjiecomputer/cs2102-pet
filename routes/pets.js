@@ -9,8 +9,10 @@ async function addPet(aid, name, weight, bday, breed, mc, remarks) {
       index++;
     }
     console.log("Pet insert success!");
+    return true;
   } catch (err) {
     console.log(err);
+    return false;
   }
 }
 
@@ -24,8 +26,10 @@ async function editPet(aid, name, weight, mc, remarks) {
       index++;
     }
     console.log('Edit success!');
+    return true;
   } catch (err) {
     console.log(err);
+    return false;
   }
 }
 
@@ -33,8 +37,10 @@ async function deletePet(aid, name) {
   try {
     await db.query('DELETE FROM Pet WHERE aid = $1 and name = $2',[aid, name]);
     console.log('Delete success!');
+    return true;
   } catch (err) {
     console.log(err);
+    return false;
   }
 }
 

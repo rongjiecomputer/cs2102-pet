@@ -1,8 +1,11 @@
 <%- include('header', {title: 'Edit Profile'}); -%>
 <main class="container">
 
-    <% if (message.length > 0) { %>
-        <div class="alert alert-danger"><%= message %></div>
+    <% if (success.length > 0) { %>
+        <div class="alert alert-success"><%= success %></div>
+    <% } %>
+    <% if (failure.length > 0) { %>
+        <div class="alert alert-danger"><%= failure %></div>
     <% } %>
 
     <!-- Change Password -->
