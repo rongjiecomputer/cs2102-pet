@@ -96,7 +96,14 @@
               <td><%= row.datestart.toLocaleDateString() %></td>
               <td><%= row.dateend.toLocaleDateString() %></td>
               <% if (user.isPetOwner) { %>
-              <td><button class="btn-primary" data-sid="<%= row.sid %>">Request</button></td>
+              <td><button class="btn-primary" id="<%= row.srid %>" data-sid="<%= row.sid %>" onclick="click2()">Request</button>
+                <script>  function click2() {
+                    var el = document.getElementById('<%= row.srid %>');
+                    if (el.textContent === "Request") {
+                      el.textContent = "Requested";
+                    }
+                  }</script>
+              </td>
               <% } %>
             </tr>
             <% } %>
@@ -131,6 +138,7 @@
         const json = await res.json();
         if (json.success) {
           btn.disabled = true;
+          btn.textContent = "Requested";
           createSuccessToast('Success!').toast('show');
         } else {
           createErrorToast(json.error).toast('show');
