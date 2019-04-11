@@ -134,8 +134,8 @@
                 const json = await res.json();
                 if (json.success) {
                     btn.disabled = true;
+                    btn.textContent = "Accepted";
                     createSuccessToast('Success!').toast('show');
-                    res.redirect('/requests');
                 } else {
                     createErrorToast(json.error).toast('show');
                 }
@@ -144,6 +144,5 @@
 
     })();
 </script>
-
 
 <%- include('footer'); -%>

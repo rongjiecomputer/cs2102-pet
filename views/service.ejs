@@ -131,6 +131,7 @@
         const json = await res.json();
         if (json.success) {
           btn.disabled = true;
+          btn.textContent = "Requested";
           createSuccessToast('Success!').toast('show');
         } else {
           createErrorToast(json.error).toast('show');
