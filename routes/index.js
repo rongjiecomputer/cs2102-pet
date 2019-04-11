@@ -393,12 +393,13 @@ module.exports = (app, passport) => {
 
 
   app.get('/advertisedRequest', isLoggedIn, async (req, res) => {
-    let query_ad = `SELECT S.*, A.name FROM ServiceRequest S JOIN Account A ON S.aid = A.aid WHERE ${req.user.aid} = A.aid`;
+    let query_ad = `SELECT S.*, A.name FROM ServiceRequest S JOIN Account A ON S.aid = A.aid WHERE ${req.user.aid} = A.aid
+    ORDER BY S.dateStart`;
 
     const client = await db.connect();
     try {
       const results = (await client.query(query_ad)).rows;
-      const serviceTypes = await Cache.getRows(Cache.SERVICE_TYPE);
+      const serviceTypes = await Cache.gcetRows(Cache.SERVICE_TYPE);
       res.render('advertisedRequest', { results, serviceTypes });
     } finally {
       client.release();
@@ -416,7 +417,8 @@ module.exports = (app, passport) => {
     });
 
     app.get('/advertisedService', isLoggedIn, async (req, res) => {
-    let query_ad = `SELECT S.*, A.name FROM Service S JOIN Account A ON S.aid = A.aid WHERE ${req.user.aid} = A.aid`;
+    let query_ad = `SELECT S.*, A.name FROM Service S JOIN Account A ON S.aid = A.aid WHERE ${req.user.aid} = A.aid 
+    ORDER BY S.dateStart`;
 
     const client = await db.connect();
     try {
@@ -445,7 +447,8 @@ module.exports = (app, passport) => {
       "JOIN Account A ON A.aid = CTR.petOwnerID " +
       "JOIN ServiceRequest SR ON SR.srid = CTR.srid " +
       "JOIN ServiceType ST ON ST.serviceType = SR.serviceType " +
-      `WHERE CTR.careTakerID = ${req.user.aid}`;
+      `WHERE CTR.careTakerID = ${req.user.aid}` +
+      "ORDER BY CTR.dateAccepted";
 
     console.log(query_ad);
 
@@ -465,7 +468,8 @@ module.exports = (app, passport) => {
       "JOIN Account A ON A.aid=POR.careTakerID " +
       "JOIN Service S ON S.sid = POR.sid " +
       "JOIN ServiceType ST ON ST.serviceType = S.serviceType " +
-      `WHERE POR.petOwnerID = ${req.user.aid}`;
+      `WHERE POR.petOwnerID = ${req.user.aid}`+
+      "ORDER BY POR.dateAccepted";
 
     console.log(query_ad);
 
