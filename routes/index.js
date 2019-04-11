@@ -357,6 +357,15 @@ module.exports = (app, passport) => {
       objs.push(req.query.dateEnd);
     }
 
+    if (checkNotEmpty(req.query.excludeMC)) {
+      let x = Number.parseInt(req.query.excludeMC);
+      if (x != -1) {
+        where_clauses.push(`$${next_placeholder_id++} NOT IN (SELECT medicalCondition
+          FROM PetMedicalCondition PMC WHERE PMC.aid = S.aid AND PMC.name = S.petName)`);
+        objs.push(x);
+      }
+    }
+
     if (where_clauses.length > 0) {
       query_s += ' WHERE ';
       query_s += where_clauses.join(' AND ');
@@ -379,8 +388,9 @@ module.exports = (app, passport) => {
 
       const regions = await Cache.getRows(Cache.REGION);
       const serviceTypes = await Cache.getRows(Cache.SERVICE_TYPE);
+      const mc = await Cache.getRows(Cache.MEDICAL_COND);
 
-      res.render('requests', { results, regions, serviceTypes });
+      res.render('requests', { results, regions, serviceTypes, mc });
     } finally {
       client.release();
     }

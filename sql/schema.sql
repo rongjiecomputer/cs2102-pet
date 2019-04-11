@@ -319,7 +319,6 @@ INSERT INTO MedicalCondition (name) VALUES ('Gastric Bloat');
 INSERT INTO MedicalCondition (name) VALUES ('Heartworm');
 INSERT INTO MedicalCondition (name) VALUES ('Too Fat');
 INSERT INTO MedicalCondition (name) VALUES ('Too Thin');
-INSERT INTO MedicalCondition (name) VALUES ('None');
 
 INSERT INTO ServiceType (name) VALUES ('Pet Walking');
 INSERT INTO ServiceType (name) VALUES ('Pet Grooming');
