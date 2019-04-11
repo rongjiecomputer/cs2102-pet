@@ -30,7 +30,7 @@ For Unix
 
 ```bash
 cp env.sample .env
-source env
+source .env
 ```
 
 Remember to set environment variables before running the app. You can edit `.env`

@@ -180,20 +180,40 @@
 <script src="/js/toast.js"></script>
 <script>
   (function () {
-    document.querySelector('#createRequestForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const formData = new FormData(e.target);
-      const res = await fetch('/api/requests/create', {
-        method: "POST",
-        body: formData,
+    const requestForm = document.querySelector('#createRequestForm');
+    if (requestForm !== null) {
+      requestForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const res = await fetch('/api/requests/create', {
+          method: "POST",
+          body: formData,
+        });
+        const json = await res.json();
+        if (json.success) {
+          createSuccessToast('Success!').toast('show');
+        } else {
+          createErrorToast(json.error).toast('show');
+        }
       });
-      const json = await res.json();
-      if (json.success) {
-        createSuccessToast('Success!').toast('show');
-      } else {
-        createErrorToast(json.error).toast('show');
-      }
-    });
+    }
+    const serviceForm = document.querySelector('#createServiceForm');
+    if (serviceForm !== null) {
+      serviceForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const res = await fetch('/api/service/create', {
+          method: "POST",
+          body: formData,
+        });
+        const json = await res.json();
+        if (json.success) {
+          createSuccessToast('Success!').toast('show');
+        } else {
+          createErrorToast(json.error).toast('show');
+        }
+      });
+    }
   })();
 </script>
 
