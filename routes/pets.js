@@ -3,7 +3,13 @@ const db = require('../db');
 async function addPet(aid, name, weight, bday, breed, mc, remarks) {
   try {
     await db.query('INSERT INTO Pet VALUES ($1, $2, $3, $4, $5, $6)', [aid, name, weight, bday, breed, remarks]);
-    let index = 0;
+    let index;
+    if (mc.length > 1){
+      index = 1;
+    }
+    else{
+      index = 0;
+    }
     while (mc[index]) {
       await db.query('INSERT INTO PetMedicalCondition VALUES ($1, $2, $3)', [aid, name, mc[index]]);
       index++;
@@ -20,7 +26,13 @@ async function editPet(aid, name, weight, mc, remarks) {
   try {
     await db.query('UPDATE Pet SET weight = $1, remark = $2 WHERE aid = $3 and name = $4',[weight, remarks, aid, name]);
     await db.query('DELETE FROM PetMedicalCondition WHERE aid = $1 and name = $2',[aid, name]);
-    let index = 0;
+    let index;
+    if (mc.length > 1){
+      index = 1;
+    }
+    else{
+      index = 0;
+    }
     while (mc[index]) {
       await db.query('INSERT INTO PetMedicalCondition VALUES ($1, $2, $3)', [aid, name, mc[index]]);
       index++;

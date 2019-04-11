@@ -310,6 +310,8 @@ INSERT INTO Breed (name) VALUES ('Bengal Cat');
 INSERT INTO Breed (name) VALUES ('Birman');
 INSERT INTO Breed (name) VALUES ('a Bird');
 
+
+INSERT INTO MedicalCondition VALUES (0, 'None');
 INSERT INTO MedicalCondition (name) VALUES ('Arthritis');
 INSERT INTO MedicalCondition (name) VALUES ('Cancer');
 INSERT INTO MedicalCondition (name) VALUES ('Dental Disease');
@@ -319,7 +321,6 @@ INSERT INTO MedicalCondition (name) VALUES ('Gastric Bloat');
 INSERT INTO MedicalCondition (name) VALUES ('Heartworm');
 INSERT INTO MedicalCondition (name) VALUES ('Too Fat');
 INSERT INTO MedicalCondition (name) VALUES ('Too Thin');
-INSERT INTO MedicalCondition (name) VALUES ('None');
 
 INSERT INTO ServiceType (name) VALUES ('Pet Walking');
 INSERT INTO ServiceType (name) VALUES ('Pet Grooming');
