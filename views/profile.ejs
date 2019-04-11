@@ -5,7 +5,7 @@
   <% if (displayedUser === null) { %>
   <div class="alert alert-danger">Profile not found.</div>
   <% } else { %>
-  <div class="profile-container">
+  <p class="profile-container">
     <figure class="figure mx-auto my-3">
       <% if (displayedUser.isPetOwner) { %>
       <!--if petowner-->
@@ -35,10 +35,10 @@
     <% if (displayedUser.isPetOwner) { %>
     <!-- Button trigger modal -->
     <p>
-      <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#setUpRequest">
+      <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#setUpRequest">
         Create a new request
       </button>
-      <a role="button" class="btn btn-warning" href="/advertisedRequest">View submitted requests</a>
+      <a role="button" class="btn btn-outline-primary" href="/advertisedRequest">View submitted requests</a>
     </p>
 
     <!-- Modal -->
@@ -89,21 +89,21 @@
       </div>
     </div>
     <p>
-      <a role="button" class="btn btn-danger" href="/service">Search services</a>
-      <a role="button" class="btn btn-danger" href="/petownerRecords">See previous accepted services</a>
+      <a role="button" class="btn btn-outline-info" href="/service">Search services</a>
+      <a role="button" class="btn btn-outline-info" href="/petownerRecords">See previous accepted services</a>
     </p>
 
     <p>
-      <a role="button" class="btn btn-success" href="/profile/pets">Manage pets</a>
-    <p>
+      <a role="button" class="btn btn-outline-primary" href="/profile/pets">Manage pets</a>
+
     <% } else { %>
     <!-- if caretaker -->
 
     <p>
-      <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#setUpService">
+      <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#setUpService">
         Create a new service
       </button>
-      <a role="button" class="btn btn-warning" href="/advertisedService">
+      <a role="button" class="btn btn-outline-primary" href="/advertisedService">
         View advertised services</a>
     </p>
 
@@ -148,13 +148,13 @@
     </div>
 
     <p>
-      <a role="button" class="btn btn-danger" href="/requests">Search for requests </a>
-      <a role="button" class="btn btn-danger" href='/caretakerRecords'>See previous accepted requests</a>
+      <a role="button" class="btn btn-outline-info" href="/requests">Search for requests </a>
+      <a role="button" class="btn btn-outline-info" href='/caretakerRecords'>See previous accepted requests</a>
     </p>
     <!-- end of care taker-->
     <% } %>
-    <p>
-      <a role="button" class="btn btn-info" href="/profile/edit">Edit your profile</a>
+
+      <a role="button" class="btn btn-outline-primary" href="/profile/edit">Edit your profile</a>
     </p>
 
     <!-- end of authenticated user -->
