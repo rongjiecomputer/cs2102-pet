@@ -5,19 +5,17 @@
     <% if (results.length == 0) { %>
     <div class="">No result found.</div>
     <% } else { %>
-    <div class="table-responsive">
-      <table class="table-striped">
-        <thead>
-          <th>Name</th>
+      <table class="table table-borderless table-hover">
+        <thead class="thead-light" >
           <th>Service Type</th>
           <th>Price (SGD)</th>
           <th>Start date</th>
           <th>End date</th>
+          <th></th>
         </thead>
         <tbody>
           <% for (const row of results) { %>
           <tr>
-            <td><%= row.name %></td>
             <td><%= serviceTypes[row.servicetype - 1].name %></td>
             <td><%= row.price %></td>
             <td><%= row.datestart.toLocaleDateString() %></td>

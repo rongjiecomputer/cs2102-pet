@@ -4,14 +4,12 @@
     <% if (results.length == 0) { %>
     <div class="">No result found.</div>
     <% } else { %>
-    <div class="table-responsive">
-        <table class="table-striped">
-            <thead>
+    <table class="table table-borderless table-hover">
+        <thead class="thead-light" >
             <th>Care Taker's Name</th>
             <th>Service Type</th>
             <th>Date Accepted</th>
-
-            </thead>
+        </thead>
             <tbody>
             <% for (const row of results) { %>
             <tr>
@@ -22,7 +20,6 @@
             <% } %>
             </tbody>
         </table>
-    </div>
     <% } %>
 </main>
 <%- include('footer'); -%>
