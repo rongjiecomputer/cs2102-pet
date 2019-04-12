@@ -119,7 +119,7 @@ module.exports = (app, passport) => {
 
   app.post('/edit/password', async (req, res) => {
     const isSame = await edit.checkPassword(req.user.aid, req.body.oldPwd, req.user.hash);
-    if (isSame) {
+    if (isSame && req.body.newPwd == req.body.cfmNewPwd) {
       const success = await edit.setPassword(req.user.aid, req.body.newPwd, req.user.hash);
       if (success){
         req.flash('success', 'Edit password success!');
