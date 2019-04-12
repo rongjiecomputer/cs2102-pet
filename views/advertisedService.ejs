@@ -21,11 +21,17 @@
             <td><%= row.datestart.toLocaleDateString() %></td>
             <td><%= row.dateend.toLocaleDateString() %></td>
             <td>
-              <form action="/advertiseService/deleteService" method="POST">
-                <button type="submit" class="btn btn-danger" name="delete" value="<%= row.sid %>">
-                  Delete
+                <%if(row.acceptedby== null) { %>
+                <form action="/advertiseService/deleteService" method="POST">
+                    <button type="submit" class="btn btn-danger" name="delete" value="<%= row.sid %>">
+                        Delete
+                    </button>
+                </form>
+                <%} else {%>
+                <button class="btn disabled btn-success">
+                    <%="Requested by: "+row.acceptedbyname%>
                 </button>
-              </form>
+                <%}%>
             </td>
           </tr>
           <% } %>
