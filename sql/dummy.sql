@@ -86,7 +86,6 @@ INSERT INTO Pet (aid,name,weight,birthday,breed,remark) VALUES
 (2, 'Mocha', 20, '2019-03-01', 3, NULL);
 
 INSERT INTO Pet VALUES(2, 'Simba', 17, '2018-12-11', 22, 'Temperamental');
-INSERT INTO PetMedicalCondition VALUES(2, 'Simba', 10);
 
 INSERT INTO Pet VALUES(2, 'Leo', 48, '2009-09-19', 21, 'Not fond of strangers');
 INSERT INTO PetMedicalCondition VALUES(2, 'Leo', 8);

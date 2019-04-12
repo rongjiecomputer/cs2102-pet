@@ -132,7 +132,7 @@ CREATE TABLE CareTakerRecords(
 CREATE TABLE PetOwnerRecords(
   petOwnerID INTEGER NOT NULL, -- PetOwner aid
   careTakerID INTEGER NOT NULL, -- CareTaker aid
-  sid INTEGER NOT NULL, -- Service Request ID
+  sid INTEGER NOT NULL, -- Service ID
   dateAccepted DATE DEFAULT CURRENT_DATE,
   FOREIGN KEY(careTakerID) REFERENCES Account,
   FOREIGN KEY(petOwnerID) REFERENCES Account,
@@ -150,16 +150,13 @@ CREATE TABLE PetOwnerRecords(
 CREATE OR REPLACE FUNCTION not_caretaker()
 RETURNS TRIGGER AS
 $$
-DECLARE count NUMERIC;
+DECLARE count int;
 BEGIN
-  SELECT COUNT (*) INTO count
-  FROM CareTaker
-  WHERE NEW.aid = CareTaker.aid;
-  IF count > 0 THEN
-    RETURN NULL;
-  ELSE
-    RETURN NEW;
+  count := (SELECT COUNT (*) FROM CareTaker WHERE NEW.aid = CareTaker.aid);
+  IF count != 0 THEN
+    RAISE EXCEPTION 'Account % cannot be both CareTaker and PetOwner', NEW.aid;
   END IF;
+  RETURN NEW;
 END;
 $$
 LANGUAGE plpgsql;
@@ -173,16 +170,13 @@ EXECUTE PROCEDURE not_caretaker();
 CREATE OR REPLACE FUNCTION not_petowner()
 RETURNS TRIGGER AS
 $$
-DECLARE count NUMERIC;
+DECLARE count int;
 BEGIN
-  SELECT COUNT (*) INTO count
-  FROM PetOwner
-  WHERE NEW.aid = PetOwner.aid;
-  IF count > 0 THEN
-    RETURN NULL;
-  ELSE
-    RETURN NEW;
+  count := (SELECT COUNT (*) FROM PetOwner WHERE NEW.aid = PetOwner.aid);
+  IF count != 0 THEN
+    RAISE EXCEPTION 'Account % cannot be both CareTaker and PetOwner', NEW.aid;
   END IF;
+  RETURN NEW;
 END;
 $$
 LANGUAGE plpgsql;
@@ -199,16 +193,13 @@ EXECUTE PROCEDURE not_petowner();
 CREATE OR REPLACE FUNCTION is_caretaker()
 RETURNS TRIGGER AS
 $$
-DECLARE count NUMERIC;
+DECLARE count int;
 BEGIN
-  SELECT COUNT (*) INTO count
-  FROM CareTaker
-  WHERE NEW.aid = CareTaker.aid;
-  IF count > 0 THEN
-    RETURN NEW;
-  ELSE
-    RETURN NULL;
+  count := (SELECT COUNT (*) FROM CareTaker WHERE NEW.aid = CareTaker.aid);
+  IF count = 0 THEN
+    RAISE EXCEPTION 'Service can only be created by CareTaker';
   END IF;
+  RETURN NEW;
 END;
 $$
 LANGUAGE plpgsql;
@@ -225,16 +216,13 @@ EXECUTE PROCEDURE is_caretaker();
 CREATE OR REPLACE FUNCTION is_petowner()
 RETURNS TRIGGER AS
 $$
-DECLARE count NUMERIC;
+DECLARE count int;
 BEGIN
-  SELECT COUNT (*) INTO count
-  FROM PetOwner
-  WHERE NEW.aid = PetOwner.aid;
-  IF count > 0 THEN
-    RETURN NEW;
-  ELSE
-    RETURN NULL;
+  count := (SELECT COUNT (*) FROM PetOwner WHERE NEW.aid = PetOwner.aid);
+  IF count = 0 THEN
+    RAISE EXCEPTION 'ServiceRequest can only be created by PetOwner';
   END IF;
+  RETURN NEW;
 END;
 $$
 LANGUAGE plpgsql;
