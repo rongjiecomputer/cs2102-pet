@@ -428,7 +428,7 @@ module.exports = (app, passport) => {
     const client = await db.connect();
     try {
       const results = (await client.query(query_ad)).rows;
-      const serviceTypes = await Cache.getRows(Cache.SERVICE_TYPE);
+      const serviceTypes = await Cache.gcetRows(Cache.SERVICE_TYPE);
       res.render('advertisedRequest', { results, serviceTypes });
     } finally {
       client.release();
