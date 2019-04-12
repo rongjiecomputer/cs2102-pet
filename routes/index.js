@@ -476,7 +476,7 @@ module.exports = (app, passport) => {
       "JOIN Account A ON A.aid = CTR.petOwnerID " +
       "JOIN ServiceRequest SR ON SR.srid = CTR.srid " +
       "JOIN ServiceType ST ON ST.serviceType = SR.serviceType " +
-      `WHERE CTR.careTakerID = ${req.user.aid}` +
+      `WHERE CTR.careTakerID = ${req.user.aid} ` +
       "ORDER BY CTR.dateAccepted";
 
     console.log(query_ad);
@@ -497,7 +497,7 @@ module.exports = (app, passport) => {
       "JOIN Account A ON A.aid=POR.careTakerID " +
       "JOIN Service S ON S.sid = POR.sid " +
       "JOIN ServiceType ST ON ST.serviceType = S.serviceType " +
-      `WHERE POR.petOwnerID = ${req.user.aid}`+
+      `WHERE POR.petOwnerID = ${req.user.aid} `+
       "ORDER BY POR.dateAccepted";
 
     console.log(query_ad);
