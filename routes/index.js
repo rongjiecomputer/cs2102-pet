@@ -422,7 +422,10 @@ module.exports = (app, passport) => {
 
 
   app.get('/advertisedRequest', isLoggedIn, async (req, res) => {
-    let query_ad = `SELECT S.*, A.name FROM ServiceRequest S JOIN Account A ON S.aid = A.aid WHERE ${req.user.aid} = A.aid
+    let query_ad = `SELECT S.*, A.name, A2.name as acceptedByName FROM ServiceRequest S 
+    JOIN Account A ON S.aid = A.aid
+    FULL JOIN Account A2 ON S.acceptedBy = A2.aid
+    WHERE ${req.user.aid} = A.aid
     ORDER BY S.dateStart`;
 
     const client = await db.connect();
@@ -446,7 +449,10 @@ module.exports = (app, passport) => {
     });
 
     app.get('/advertisedService', isLoggedIn, async (req, res) => {
-    let query_ad = `SELECT S.*, A.name FROM Service S JOIN Account A ON S.aid = A.aid WHERE ${req.user.aid} = A.aid 
+    let query_ad = `SELECT S.*, A.name, A2.name as acceptedByName FROM Service S 
+    JOIN Account A ON S.aid = A.aid
+    FULL JOIN Account A2 ON S.acceptedBy = A2.aid
+    WHERE ${req.user.aid} = A.aid
     ORDER BY S.dateStart`;
 
     const client = await db.connect();
