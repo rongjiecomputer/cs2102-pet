@@ -32,6 +32,6 @@ table {
   bottom: 0;
   padding: 20px;
 }
-tr > button {
+tr button {
   width: 100%;
 }
