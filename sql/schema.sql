@@ -308,7 +308,7 @@ INSERT INTO Breed (name) VALUES ('Turkish Angora');
 INSERT INTO Breed (name) VALUES ('Norwegian Forest Cat');
 INSERT INTO Breed (name) VALUES ('Bengal Cat');
 INSERT INTO Breed (name) VALUES ('Birman');
-INSERT INTO Breed (name) VALUES ('a Bird');
+INSERT INTO Breed (name) VALUES ('A Bird');
 
 INSERT INTO MedicalCondition (name) VALUES ('Arthritis');
 INSERT INTO MedicalCondition (name) VALUES ('Cancer');
@@ -322,8 +322,8 @@ INSERT INTO MedicalCondition (name) VALUES ('Too Thin');
 
 INSERT INTO ServiceType (name) VALUES ('Pet Walking');
 INSERT INTO ServiceType (name) VALUES ('Pet Grooming');
-INSERT INTO ServiceType (name) VALUES ('Pet health checkup');
+INSERT INTO ServiceType (name) VALUES ('Pet Health Checkup');
 INSERT INTO ServiceType (name) VALUES ('Pet Petting');
 INSERT INTO ServiceType (name) VALUES ('Pet Sitting');
-INSERT INTO ServiceType (name) VALUES ('Pet Dance lessons');
+INSERT INTO ServiceType (name) VALUES ('Pet Dance Lessons');
 INSERT INTO ServiceType (name) VALUES ('Pet Training');
